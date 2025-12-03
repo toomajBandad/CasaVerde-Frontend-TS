@@ -1,0 +1,371 @@
+.messages {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(
+    to bottom right,
+    var(--Pine-Green),
+    var(--Light-Jade)
+  );
+}
+.messages__container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.messages__middle {
+  display: flex;
+  overflow: scroll;
+}
+/* Room Item Card Start*/
+.roomItem {
+  background-color: rgb(236, 236, 236);
+  border: 1px solid var(--dark-Gray);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--dark-Gray);
+  cursor: pointer;
+}
+.activeRoom {
+  background-color: rgb(179, 218, 150);
+}
+.roomItem:hover {
+  background-color: rgb(217, 217, 217);
+}
+.activeRoom:hover {
+  background-color: rgb(179, 218, 150);
+}
+
+.roomItem__ownerWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: aladin !important;
+}
+.roomItem__dataWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.roomItem__textWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+}
+.roomItem__error__wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  gap: 1rem;
+}
+.roomItem__error {
+  color: var(--white);
+  font-size: 1.5rem;
+}
+
+/* Room Item Card End*/
+
+/* chat Box  Start*/
+.form-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.msginput {
+  max-width: 40rem;
+  color: var(--dark-Gray);
+}
+
+.sendbutton {
+  text-align: center;
+
+  max-width: 20rem;
+  background-color: var(--Pine-Green);
+  color: var(--Lemon-Lime);
+}
+.sendbutton:hover {
+  cursor: pointer;
+  background-color: rgb(179, 218, 150);
+  color: var(--Pine-Green);
+  transition: all 0.3s ease-in-out;
+}
+
+.formInput,
+.sendbutton {
+  font-weight: 600;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+.messages__left {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.chat-display {
+  padding-bottom: 1rem;
+  list-style-type: none;
+  width: 100%;
+  max-height: 80vh;
+  border-radius: 10px;
+  display: flex;
+  flex-flow: column;
+  overflow: auto;
+}
+
+.post {
+  background-color: #eee;
+  border-radius: 10px;
+  padding: 0 0 0.25rem;
+  margin: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  max-width: 30rem;
+}
+
+.post--left {
+  align-self: flex-start;
+}
+
+.post--right {
+  align-self: flex-end;
+}
+
+.post__header {
+  color: var(--Pine-Green);
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.post__header--user {
+  background-color: rgb(132, 223, 190);
+}
+
+.post__header--reply {
+  background-color: rgb(179, 218, 150);
+}
+
+.post__header--name {
+  font-weight: bold;
+}
+
+.post__header--time {
+  font-size: 0.8rem;
+}
+
+.post__text {
+  margin-top: 5px;
+  color: #333;
+  padding: 0.25rem 0.5rem;
+}
+
+.adminMsg {
+  background-color: rgb(139, 139, 139);
+  align-self: center;
+  text-align: center;
+  color: rgb(202, 240, 200);
+  border-radius: none;
+  padding: 0.5rem;
+}
+
+.user-list,
+.room-list,
+.activity {
+  width: 100%;
+  min-height: 2.65rem;
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 0.75rem 0.25rem;
+}
+
+.activity {
+  font-style: italic;
+}
+/* chat Box  End*/
+
+/* Mobile Size */
+@media only screen and (max-width: 900px) {
+  .messages__container {
+    flex-direction: column;
+  }
+  .messages__middle {
+    width: 100%;
+    height: 31vh;
+    overflow: scroll;
+    flex-direction: row;
+    margin-top: 0;
+  }
+  .messages__left {
+    height: 60vh;
+  }
+  .chat-display {
+    padding: 0;
+  }
+  .post--left {
+    width: 80%;
+  }
+  .roomItem {
+    flex-direction: column;
+    padding: 0;
+    min-width: 8rem;
+    height: 15rem;
+    gap: 0.2rem;
+  }
+  .roomItem__ownerWrapper {
+    padding: 0;
+    gap: 0.2rem;
+  }
+  .roomItem__dataWrapper {
+    padding: 0;
+    gap: 0.2rem;
+    flex-direction: column;
+  }
+  .roomItem__textWrapper {
+    gap: 0.2rem;
+    width: 100%;
+    text-align: center;
+    padding: 0.2rem;
+  }
+  .roomItem__text__desc {
+    font-size: 0.8rem;
+    text-align: start !important;
+  }
+  .roomItem__text {
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+  .roomItem__ownerIcon {
+    display: none;
+  }
+  .roomItem__ownerName {
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  .roomItem__imgWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .roomItem__img {
+    border-radius: 0px;
+    width: auto;
+    height: 8rem;
+  }
+  .post--right {
+    width: 80%;
+  }
+  .form-message {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  .formInput,
+  .sendbutton {
+    padding: 0.8rem;
+  }
+  .msginput {
+    width: 80%;
+  }
+
+  .sendbutton {
+    width: 20%;
+  }
+}
+/* Desktop Size */
+@media only screen and (min-width: 900px) {
+  .messages__container {
+    flex-direction: row;
+  }
+  .messages__middle {
+    flex-direction: column;
+    height: 90vh;
+    width: 35rem;
+    margin-top: 9vh;
+  }
+  .messages__left {
+    margin-top: 9vh;
+    height: 88vh;
+  }
+  .roomItem {
+    width: 100%;
+    flex-direction: column;
+    padding: 0rem;
+  }
+  .roomItem__ownerWrapper {
+    padding: 0.2rem;
+    gap: 1rem;
+  }
+  .roomItem__dataWrapper {
+    flex-direction: row;
+    padding: 0.2rem;
+    gap: 0.5rem;
+  }
+  .roomItem__textWrapper {
+    gap: 1rem;
+    width: 70%;
+  }
+  .roomItem__text {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  .roomItem__text__desc {
+    font-size: 1rem;
+  }
+  .roomItem__ownerIcon {
+    font-size: 2rem;
+    color: rgb(100, 100, 100);
+  }
+  .roomItem__ownerName {
+    font-size: 1rem;
+  }
+
+  .roomItem__imgWrapper {
+    width: 30%;
+  }
+
+  .roomItem__img {
+    border-radius: 10px;
+    width: 100%;
+  }
+  .chat-display {
+    padding: 0 5rem;
+  }
+  .post--left {
+    width: 60%;
+  }
+
+  .post--right {
+    width: 60%;
+  }
+  .form-message {
+    padding: 0;
+    gap: 2rem;
+  }
+  .formInput,
+  .sendbutton {
+    padding: 0.9rem 1rem;
+  }
+  .msginput {
+    width: 75%;
+  }
+
+  .sendbutton {
+    width: 15%;
+  }
+}

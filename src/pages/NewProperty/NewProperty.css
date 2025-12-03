@@ -1,0 +1,191 @@
+.NewProperty {
+  width: 100%;
+  background-image: linear-gradient(
+    to bottom right,
+    var(--Pine-Green),
+    var(--Light-Jade)
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+.Property__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.PropertyForm__imageWrapper {
+  overflow: hidden;
+}
+.PropertyForm__image {
+  height: 100%;
+  width: 100%;
+}
+.PropertyForm__Container {
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.PropertyForm__Title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--Pine-Green);
+}
+.PropertyForm {
+  width: 100%;
+  display: grid;
+}
+
+.PropertyForm__button__wraper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.PropertyForm__button {
+  font-weight: 800 !important;
+  border: none;
+  background-color: var(--Light-Jade) !important;
+  color: var(--Pine-Green) !important;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.PropertyForm__button:hover {
+  color: var(--Light-Jade) !important;
+  background-color: var(--Pine-Green) !important;
+}
+.Map__button {
+  width: 5rem;
+  font-weight: 500 !important;
+  font-size: small;
+  border: none;
+  background-color: var(--Light-Jade) !important;
+  color: var(--Pine-Green) !important;
+  padding: 0.3rem !important;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 2rem !important;
+}
+.Map__button:hover {
+  color: var(--Light-Jade) !important;
+  background-color: var(--Pine-Green) !important;
+}
+
+/* Mobile Size */
+@media only screen and (max-width: 900px) {
+  .NewProperty {
+    height: auto;
+  }
+  .Property__wrapper {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .PropertyForm__Container {
+    border-radius: 0px;
+    width: 100%;
+    padding: 0.5rem;
+  }
+  .PropertyForm__Title {
+    padding: 1rem;
+    margin-bottom: 0rem;
+    font-size: 2rem;
+  }
+  .PropertyForm {
+    padding: 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1rem;
+  }
+  .PropertyForm__imageWrapper {
+    height: 30vh;
+    width: 100%;
+  }
+  .PropertyForm__image {
+    height: auto;
+    border-radius: 0;
+  }
+  .descInput {
+    grid-row: 1 / span 2 !important;
+  }
+  #imgUpload {
+    max-width: 5rem;
+  }
+  .FileUploader {
+    margin-left: 3rem;
+  }
+  .PropertyForm__button__wraper {
+    grid-column: 1 / span 2;
+    margin-top: 0.5rem;
+  }
+  .inputHolder {
+    text-align: center;
+  }
+  .PropertyForm__button {
+    font-size: 0.7rem !important;
+    width: 50%;
+  }
+}
+/* Desktop Size */
+@media only screen and (min-width: 900px) {
+  .NewProperty {
+    height: 120vh;
+  }
+  .Property__wrapper {
+    flex-direction: row;
+    width: 90%;
+  }
+  .Property__foto {
+    height: 100%;
+    max-width: 30rem;
+    border-radius: 90px 0 0 90px;
+  }
+  .PropertyForm__Container {
+    border-radius: 0 90px 90px 0;
+    width: 70%;
+    padding: 1rem;
+  }
+  .PropertyForm__Title {
+    padding: 2rem;
+    margin-bottom: 1rem;
+  }
+  .PropertyForm {
+    padding: 2rem 1rem;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 2rem 0rem;
+  }
+  .PropertyForm__input {
+    max-width: 20rem;
+  }
+  .halfInput {
+    max-width: 10rem;
+  }
+  .PropertyForm__imageWrapper {
+    height: 100%;
+    width: 30%;
+  }
+  .PropertyForm__image {
+    border-radius: 200px 0 0 200px;
+  }
+  .descInput {
+    grid-row: 4 / span 2 !important;
+  }
+  .PropertyForm__button__wraper {
+    grid-column: 1 / span 3;
+    margin-top: 2rem;
+  }
+  .inputHolder {
+    display: flex;
+    align-items: center;
+    justify-content:start;
+  }
+  .PropertyForm__button {
+    width: 30%;
+  }
+}

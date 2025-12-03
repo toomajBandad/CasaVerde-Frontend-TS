@@ -1,0 +1,131 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+@theme {
+  --color-Forest: #228b22;
+  --color-Pine: #01796f;
+  --color-Mint: #98ff98;
+  --color-Lemon: #b2ff66;
+  --color-Seafoam: #a3d9d1;
+  --color-SkyBlue: #87cefa;
+  --color-Jade: #b3e2d9;
+  --color-OffWhite: #e6e6fa;
+  --color-white: #f9f9f9;
+  --color-lightGray: #d3d3d3;
+  --color-darkGray: #464646;
+  --font-Aladin: "Aladin", cursive;
+  --font-Fascinate: "Fascinate", cursive;
+  --font-Gumy: "Gumy", sans-serif;
+}
+
+:root {
+  --Forest-Green: #228b22;
+  --Pine-Green: #01796f;
+  --Mint-Green: #98ff98;
+  --Normal-Green: #4fc074;
+  --Lemon-Lime: #b2ff66;
+  --Soft-Seafoam: #a3d9d1;
+  --Sky-Blue: #87cefa;
+  --medium-Blue: #2375a8;
+  --Light-Jade: #b3e2d9;
+  --veryLight-Jade: #d9f3ed;
+  --Off-White: #e6e6fa;
+  --white: #f9f9f9;
+  --light-Gray: #d3d3d3;
+  --dark-Gray: #464646;
+  --red: #ff5a5a;
+}
+
+@font-face {
+  font-family: Aladin;
+  src: url("/fonts/Aladin/Aladin-Regular.ttf");
+}
+@font-face {
+  font-family: Fascinate;
+  src: url("/fonts/Fascinate_Inline/FascinateInline-Regular.ttf");
+}
+@font-face {
+  font-family: Gumy;
+  src: url("/fonts/Gummy/SourGummy.ttf");
+}
+
+body {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: var(--dark-Gray);
+  font-size: 16px;
+}
+.swal-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mainTitle {
+  font-family: Aladin;
+  font-size: 2.5rem;
+  font-weight: 600;
+  padding: 1rem 0;
+  color: var(--Pine-Green);
+  text-decoration: underline;
+}
+.mainsubtitle {
+  font-size: 1rem;
+  padding: 1rem;
+  color: var(--Pine-Green);
+  background-color: var(--Light-Jade);
+  width: fit-content;
+  margin-bottom: 1rem;
+}
+.swal2-icon {
+  color: var(--red) !important;
+  border-color: var(--red) !important;
+  margin-top: 2rem;
+}
+.swal2-title {
+  font-family: Aladin;
+  font-size: 2rem;
+  padding: 0;
+  margin: 1rem 0;
+  color: var(--dark-Gray);
+  text-align: center;
+}
+.swal2-html-container {
+  font-size: 1.2rem;
+  color: gray;
+  text-align: center;
+  padding: 1rem;
+}
+.swal2-confirm {
+  background-color: var(--red);
+  color: var(--white);
+  font-family: aladin;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+.swal2-cancel {
+  background-color: var(--Mint-Green);
+  color: var(--Pine-Green);
+  font-family: aladin;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+.swal2-confirm:hover {
+  background-color: #e14747;
+}
+.swal2-cancel:hover {
+  background-color: #85ec85;
+}
+
+.loadingWrapper {
+  font-size: 2rem;
+  background-color: var(--white);
+  color: var(--Pine-Green);
+  font-family: aladin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+  height: 70vh;
+  width: 100%;
+}

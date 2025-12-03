@@ -1,0 +1,208 @@
+.profile {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  background-image: linear-gradient(
+    to bottom right,
+    #025b53,
+    #0e8a7f,
+    #5abeac,
+    var(--Light-Jade)
+  );
+}
+#sidebarMobile {
+  color: white !important;
+  border-color: aliceblue !important;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.profile__sidebarLogo {
+  font-family: aladin;
+  color: var(--white);
+  font-size: 2rem;
+  text-align: center;
+}
+.profile__sidebarWrapper {
+  padding: 0rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 2rem;
+  padding-bottom: 2rem;
+}
+.profile__sidebarItem {
+  background-color: var(--Pine-Green);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  font-size: 1.3rem;
+  padding: 1rem;
+  color: var(--white);
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  box-shadow: 3px 3px 10px -5px rgb(0, 0, 0);
+  transition: all ease 400ms;
+  border-left: 7px solid var(--light-Gray);
+}
+.profile__sidebarItem.active {
+  background-color: var(--Mint-Green);
+  border-left: 5px solid var(--Pine-Green);
+  color: var(--Pine-Green);
+  border-left: 7px solid rgb(255, 213, 0);
+}
+.profile__sidebarItem:hover {
+  background-color: var(--white);
+  color: var(--Pine-Green);
+  box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.7);
+}
+
+.profile__mainbar {
+  overflow: scroll;
+  background-color: var(--white);
+}
+.profile__mainbar__titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mainbar__title {
+  font-size: 2rem;
+  color: var(--white);
+  text-shadow: 0 0 5px var(--Pine-Green);
+}
+.mainbar__subtitle {
+  color: var(--Pine-Green);
+  font-size: large;
+}
+.mainbar__datebox {
+  background-color: var(--Light-Jade);
+  font-size: large;
+
+  border-radius: 10px;
+  color: var(--white);
+  text-shadow: 0 0 5px var(--Pine-Green);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.mainbar__datebox:hover {
+  background-color: var(--Pine-Green);
+  color: var(--white);
+  cursor: pointer;
+}
+.mainbar__datebox:hover > .mainbar__datebox__icon {
+  color: var(--white);
+}
+.mainbar__datebox__icon {
+  font-size: 1.5rem;
+  color: var(--Pine-Green);
+}
+
+.mainbar__titlebox__title {
+  padding: 2rem;
+}
+
+.profile__mainbar__body {
+  display: flex;
+  gap: 2rem;
+  color: var(--dark-Gray);
+}
+
+/* Mobile Size */
+@media only screen and (max-width: 900px) {
+  .profile {
+    flex-direction: column;
+    padding-top: 0.5rem;
+  }
+  .profile__sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .profile__sidebarLogo {
+    padding: 1rem;
+    font-size: 2rem;
+  }
+  .profile__sidebarWrapper {
+    display: none;
+  }
+  .profile__sidebarMobileWrapper {
+    display: flex;
+  }
+  .profile__mainbar__wrapper {
+    width: 100%;
+  }
+  .profile__mainbar {
+    border-radius: 0%;
+  }
+  .mainbar__titlebox {
+    padding: 0rem;
+  }
+  .profile__mainbar__titlebar {
+    margin-top: 1rem;
+    padding: 0.5rem;
+  }
+  .mainbar__datebox {
+    padding: 0.5rem;
+  }
+  .profile__mainbar__body {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    flex-direction: column;
+  }
+}
+
+/* Desktop Size */
+@media only screen and (min-width: 900px) {
+  .profile {
+    flex-direction: row;
+    padding-top: 9vh;
+  }
+  .profile__sidebar {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+  }
+  .profile__sidebarLogo {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    padding: 1rem;
+  }
+  .profile__sidebarWrapper {
+    display: flex;
+  }
+  .profile__sidebarMobileWrapper {
+    display: none;
+  }
+  .profile__mainbar__wrapper {
+    width: 85%;
+  }
+  .profile__mainbar {
+    width: 98%;
+    height: 80vh;
+    margin: 2% 1%;
+    padding: 0;
+    border-radius: 3rem 3rem 0 0;
+  }
+  .mainbar__titlebox {
+    padding: 1rem;
+  }
+  .profile__mainbar__titlebar {
+    padding: 2rem 3rem;
+  }
+  .mainbar__datebox {
+    padding: 1.2rem;
+  }
+  .profile__mainbar__body {
+    padding: 2rem;
+    flex-direction: row;
+  }
+}

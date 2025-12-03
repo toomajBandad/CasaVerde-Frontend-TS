@@ -1,0 +1,103 @@
+:root {
+  --Forest-Green: #228b22;
+  --Pine-Green: #01796f;
+  --Mint-Green: #98ff98;
+  --Normal-Green: #4fc074;
+  --Lemon-Lime: #b2ff66;
+  --Soft-Seafoam: #a3d9d1;
+  --Sky-Blue: #87cefa;
+  --medium-Blue: #2375a8;
+  --Light-Jade: #b3e2d9;
+  --veryLight-Jade: #d9f3ed;
+  --Off-White: #e6e6fa;
+  --white: #f9f9f9;
+  --light-Gray: #d3d3d3;
+  --dark-Gray: #464646;
+  --red: #ff5a5a;
+}
+.about__missions {
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.about__missions__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
+  background-image: linear-gradient(to right, #f9f9f9, #c6c6c6);
+}
+.about__missions__leftContainer {
+  color: var(--dark-Gray);
+  border-radius: 10px;
+}
+.about__missions__header {
+  font-family: aladin;
+  color: #252525;
+}
+.about__missions__subheader {
+  color: var(--dark-Gray);
+}
+.about__missions__text {
+  line-height: 1.5rem;
+  font-size: 1rem;
+  text-align: justify;
+}
+
+/* Mobile Size */
+@media only screen and (max-width: 900px) {
+  .about__missions {
+    padding: 0rem;
+  }
+  .about__missions__container {
+    flex-direction: column;
+    border-radius: none;
+    padding: 0rem;
+  }
+  .about__missions__leftContainer {
+    padding: 0 1rem;
+  }
+  .about__missions__rightContainer {
+    padding-bottom: 1rem;
+    width: 100%;
+  }
+  .ContactForm__Top {
+    padding: 0 !important;
+  }
+  .about__missions__header {
+    margin-top: 2rem;
+    font-size: 1.9rem;
+  }
+  .about__missions__text {
+    margin-bottom: 1rem;
+  }
+}
+/* Desktop Size */
+@media only screen and (min-width: 900px) {
+  .about__missions {
+    /* padding: 3rem; */
+  }
+  .about__missions__container {
+    flex-direction: row;
+    /* border-radius: 10rem 5rem 15rem 5rem; */
+    padding: 1rem;
+  }
+  .about__missions__leftContainer {
+    width: 50%;
+    padding: 3rem;
+  }
+  .about__missions__rightContainer {
+    width: 50%;
+    padding: 2rem 0;
+  }
+  .about__missions__header {
+    font-size: 2rem;
+    text-decoration: underline;
+  }
+  .about__missions__text {
+    margin-bottom: 2rem;
+  }
+}

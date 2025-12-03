@@ -1,0 +1,49 @@
+.SearchProps {
+  background-image: linear-gradient(
+    to bottom right,
+    var(--Pine-Green),
+    var(--Light-Jade)
+  );
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.filters__wrapper {
+  background-color: var(--white);
+  width: 100%;
+}
+.propertyCardWrapper {
+  background-color: var(--white);
+  width: 100%;
+  margin: 0;
+  position: relative;
+}
+
+/* Mobile Size */
+@media only screen and (max-width: 900px) {
+  .SearchProps {
+    padding-top: 0vh;
+  }
+  .filters__wrapper {
+    padding-top: 1rem;
+  }
+  .propertyCardWrapper {
+    padding: 0.5rem;
+  }
+}
+/* Desktop Size */
+@media only screen and (min-width: 900px) {
+  .SearchProps {
+    padding-top: 9vh;
+  }
+  .propertyCardWrapper {
+    min-height: 72vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+  }
+}

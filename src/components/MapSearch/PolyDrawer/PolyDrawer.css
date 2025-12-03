@@ -1,0 +1,52 @@
+.mapContainer__wrapper {
+  position: absolute;
+  top: 47px;
+  left: 0;
+  height: 48vh;
+  width: 100%;
+}
+.mapContainer {
+  height: 48vh;
+  margin: 0 auto;
+  width: 100%;
+  z-index: 1;
+}
+.drawBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 99;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: var(--white);
+  padding: 0.7rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  margin: 10px;
+}
+.drawBtn:hover {
+  background-color: black;
+}
+.drawBtn1 {
+  top: 0;
+  left: 38px;
+}
+.drawBtn2 {
+  top: 0;
+  left: 181px;
+}
+.drawBtn3 {
+  top: 0;
+  left: 320px;
+}
+.drawBtn4 {
+  top: 0;
+  right: 10px;
+}
+.drawBtn__icon {
+  color: var(--Mint-Green);
+  font-size: large;
+}
