@@ -20,8 +20,8 @@ export type User = {
   username: string;
   email: string;
   role: Role;
-  listings?: (string | Property)[]; // owner property IDs
-  favorites?: (string | Property)[]; // favorite saved property IDs
+  listings?: Property[]; // owner property IDs
+  favorites?: Property[]; // favorite saved property IDs
   recentSearches?: Search[];
   messages?: Message[]; // message IDs
   profile?: Profile;

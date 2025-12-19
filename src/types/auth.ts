@@ -6,8 +6,8 @@ export interface AuthContextType {
   isLoggedIn: boolean;
   token: string | null;
   userInfos: User | null;
-  userFavorites: Property[];
-  userMessages: Message[];
+  userFavorites: Property[]; // ✅ always Property[]
+  userMessages: Message[]; // ✅ always Message[]
   login: (user: User, token: string) => void;
   logout: () => void;
   sendMsgToOwner: (msg: Message) => void;
