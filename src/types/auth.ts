@@ -4,11 +4,10 @@ import type { Message } from "./message";
 
 export interface AuthContextType {
   isLoggedIn: boolean;
-  token: string | null;
   userInfos: User | null;
-  userFavorites: Property[]; // ✅ always Property[]
-  userMessages: Message[]; // ✅ always Message[]
-  login: (user: User, token: string) => void;
+  userFavorites: Property[];
+  userMessages: Message[];
+  login: () => void;
   logout: () => void;
   sendMsgToOwner: (msg: Message) => void;
   updateUserInfos: (newUserInfo: Partial<User>) => void;

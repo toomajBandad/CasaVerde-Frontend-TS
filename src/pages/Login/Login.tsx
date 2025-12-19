@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import AuthContext from "../../contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ interface LoginFormInputs {
 }
 
 export default function Login() {
+  const authContext = useContext(AuthContext);
   const apiUrl = import.meta.env.VITE_API_URL as string;
   const navigate = useNavigate();
 
@@ -37,6 +39,8 @@ export default function Login() {
       const result = await res.json();
 
       if (res.ok) {
+        authContext.login();
+
         Swal.fire({
           icon: "success",
           title: "Login Successful",

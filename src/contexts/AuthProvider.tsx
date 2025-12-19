@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AuthContext from "./AuthContext";
 import type { User } from "../types/user";
 import type { Property } from "../types/property";
@@ -10,27 +10,63 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
   const [userInfos, setUserInfos] = useState<User | null>(null);
   const [userFavorites, setUserFavorites] = useState<Property[]>([]);
   const [userMessages, setUserMessages] = useState<Message[]>([]);
 
-  const login = (user: User, token: string) => {
-    setToken(token);
-    setIsLoggedIn(true);
-    setUserInfos(user);
-    setUserFavorites(user.favorites || []);
-    setUserMessages(user.messages || []);
-    localStorage.setItem("user", JSON.stringify({ token, user }));
+  const apiUrl = import.meta.env.VITE_API_URL as string;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/users/me`, {
+          credentials: "include", // ✅ send cookie
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setUserInfos(data.user);
+            setIsLoggedIn(true);
+            setUserFavorites(data.user.favorites || []);
+            setUserMessages(data.user.messages || []);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to restore session:", err);
+      }
+    };
+
+    fetchUser();
+  }, [apiUrl]);
+
+  const login = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/users/me`, { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        setUserInfos(data.user);
+        setIsLoggedIn(true);
+        setUserFavorites(data.user.favorites || []);
+        setUserMessages(data.user.messages || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user after login:", err);
+    }
   };
 
-  const logout = () => {
-    setToken(null);
+  const logout = async () => {
+    try {
+      await fetch(`${apiUrl}/users/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Failed to clear cookie:", err);
+    }
     setIsLoggedIn(false);
     setUserInfos(null);
     setUserFavorites([]);
     setUserMessages([]);
-    localStorage.removeItem("user");
   };
 
   const updateUserInfos = (newUserInfo: Partial<User>) => {
@@ -46,7 +82,6 @@ export default function AuthProvider({
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        token,
         userInfos,
         userFavorites,
         userMessages,
