@@ -5,6 +5,7 @@ import type { User } from "../../types/user";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
 import Swal from "sweetalert2";
+import MainBtn from "../../components/MainBtn/MainBtn";
 
 interface RegisterFormInputs {
   username: string;
@@ -145,13 +146,13 @@ export default function Register() {
                 a number
               </span>
             )}
-
-            <button
+            <MainBtn type="submit">Register</MainBtn>
+            {/* <button
               type="submit"
               className="bg-Pine text-Jade font-bold py-2 px-4 rounded hover:bg-green-900 hover:text-green-100 transition"
             >
               Register
-            </button>
+            </button> */}
           </form>
         </div>
       </div>
