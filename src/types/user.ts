@@ -20,10 +20,10 @@ export type User = {
   username: string;
   email: string;
   role: Role;
-  listings?: [Property]; // property IDs
-  favorites?: string[]; // saved property IDs
+  listings?: (string | Property)[]; // owner property IDs
+  favorites?: (string | Property)[]; // favorite saved property IDs
   recentSearches?: Search[];
-  messages?: [Message]; // message IDs
+  messages?: Message[]; // message IDs
   profile?: Profile;
   createdAt?: string; // ISO date string
   updatedAt?: string; // ISO date string

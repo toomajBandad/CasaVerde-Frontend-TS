@@ -1,9 +1,10 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import type { User } from "../../types/user";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
+import Swal from "sweetalert2";
 
 interface RegisterFormInputs {
   username: string;
@@ -21,14 +22,6 @@ export default function Register() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext) as AuthContextType;
 
-  const [isShowModal, setIsShowModal] = useState(false);
-  const [isModalSuccess, setIsModalSuccess] = useState(true);
-
-  const modalText = {
-    success: "Now you are ready to play our games!",
-    fail: "Register failed. Please try again later",
-  };
-
   const {
     register,
     handleSubmit,
@@ -37,7 +30,7 @@ export default function Register() {
 
   const onSubmit: SubmitHandler<RegisterFormInputs> = async (formDatas) => {
     try {
-      const res = await fetch(`${apiUrl}/users/newUser`, {
+      const res = await fetch(`${apiUrl}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formDatas),
@@ -46,19 +39,33 @@ export default function Register() {
       const result = await res.json();
 
       if (res.ok && result.user) {
-        sendEmailToUser(result.user._id);
+        sendEmailToUser(result.user.id);
         authContext.login(result.user, result.access_token);
-        setIsModalSuccess(true);
+
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful",
+          text: "Welcome to Casa Verde! You can now explore properties.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
         setTimeout(() => navigate("/"), 2000);
       } else {
-        setIsModalSuccess(false);
         authContext.logout();
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: result.message || "Please try again later.",
+        });
       }
-      setIsShowModal(true);
     } catch (err) {
       console.error(err);
-      setIsModalSuccess(false);
-      setIsShowModal(true);
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Something went wrong. Please try again later.",
+      });
     }
   };
 
@@ -75,8 +82,8 @@ export default function Register() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-green-900 to-green-400">
-      <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-Pine to-Seafoam pt-20">
+      <div className="flex flex-col md:flex-row bg-white rounded-8xl shadow-lg overflow-hidden">
         <div className="md:w-1/2">
           <img
             src="/images/sides/1.jpg"
@@ -141,29 +148,11 @@ export default function Register() {
 
             <button
               type="submit"
-              className="bg-green-400 text-green-900 font-bold py-2 px-4 rounded hover:bg-green-900 hover:text-green-100 transition"
+              className="bg-Pine text-Jade font-bold py-2 px-4 rounded hover:bg-green-900 hover:text-green-100 transition"
             >
               Register
             </button>
           </form>
-
-          {isShowModal && (
-            <div
-              className={`mt-4 p-3 rounded text-center font-semibold ${
-                isModalSuccess
-                  ? "bg-green-200 text-green-900"
-                  : "bg-red-200 text-red-900"
-              }`}
-            >
-              {isModalSuccess ? modalText.success : modalText.fail}
-              <button
-                onClick={() => setIsShowModal(false)}
-                className="ml-4 text-sm underline"
-              >
-                Close
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
