@@ -40,17 +40,15 @@ export default function NewsBar() {
   }, [apiUrl]);
 
   return (
-    <div className="flex flex-col justify-center items-start m-0 p-0 h-auto md:mx-20 md:py-8 md:h-[65vh]">
-      <h2 className="text-[1.8rem] p-2 mt-4 mainTitle text-Pine">
-        Casa Verde / News
-      </h2>
-      <p className="text-center mainsubtitle">
+    <div className="flex flex-col justify-center items-start m-0 p-0 h-auto md:mx-20 md:py-8">
+      <h2 className="mainTitle">Casa Verde / News</h2>
+      <p className="mainsubtitle">
         Helpful guides and practical advice for buying or renting your dream
         house abroad.
       </p>
 
       {/* Category Tabs */}
-      <div className="w-full flex items-center border-b border-gray-400 text-center text-base font-normal m-0 gap-0 md:text-lg md:font-bold md:my-4 md:mb-8 md:gap-4">
+      <div className="w-full flex items-center border-b border-neutral-400 text-center text-base font-normal m-0 gap-0 md:text-lg md:font-bold md:my-4 md:mb-8">
         {allNewsCat.map((cat) => (
           <span
             key={cat}

@@ -1,78 +1,73 @@
-import React, { useContext, useState } from "react";
-import "./../Login/Login.css";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import type { User } from "../../types/user";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-import ModalMaterial from "../../component-backup/ModalMaterial/ModalMaterial";
-import { Button } from "@mui/material";
 import AuthContext from "../../contexts/AuthContext";
 
-export default function Register() {
-  const apiUrl = import.meta.env.VITE_API_URL;
+interface RegisterFormInputs {
+  username: string;
+  email: string;
+  password: string;
+}
 
+interface AuthContextType {
+  login: (user: User, token: string) => void;
+  logout: () => void;
+}
+
+export default function Register() {
+  const apiUrl = import.meta.env.VITE_API_URL as string;
   const navigate = useNavigate();
-  const authContext = useContext(AuthContext);
+  const authContext = useContext(AuthContext) as AuthContextType;
 
   const [isShowModal, setIsShowModal] = useState(false);
   const [isModalSuccess, setIsModalSuccess] = useState(true);
 
   const modalText = {
-    success: "Now your are ready to play our games!",
-    fail: "Register Fail. Please try again Later",
+    success: "Now you are ready to play our games!",
+    fail: "Register failed. Please try again later",
   };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<RegisterFormInputs>();
 
-  const onSubmit = async (formDatas) => {
-    await fetch(`${apiUrl}/users/newUser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: formDatas.username,
-        password: formDatas.password,
-        email: formDatas.email,
-      }),
-    })
-      .then((res) => {
-        if (res.ok === true) {
-          setIsModalSuccess(true);
-        } else {
-          setIsModalSuccess(false);
-        }
-        setIsShowModal(true);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.user) {
-          sendEmailToUser(result.user._id);
-          authContext.login(result.user, result.access_token);
-          setTimeout(() => {
-            navigate("/");
-          }, 2000);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsModalSuccess(false);
-        setIsShowModal(true);
+  const onSubmit: SubmitHandler<RegisterFormInputs> = async (formDatas) => {
+    try {
+      const res = await fetch(`${apiUrl}/users/newUser`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formDatas),
       });
+
+      const result = await res.json();
+
+      if (res.ok && result.user) {
+        sendEmailToUser(result.user._id);
+        authContext.login(result.user, result.access_token);
+        setIsModalSuccess(true);
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        setIsModalSuccess(false);
+        authContext.logout();
+      }
+      setIsShowModal(true);
+    } catch (err) {
+      console.error(err);
+      setIsModalSuccess(false);
+      setIsShowModal(true);
+    }
   };
 
-  function sendEmailToUser(userId) {
-    console.log("sendingEmail...", userId);
+  function sendEmailToUser(userId: string) {
     fetch(`${apiUrl}/users/sendMail`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: userId,
+        userId,
         type: "Welcome",
         subject: "Welcome from Casa Verde",
       }),
@@ -80,98 +75,97 @@ export default function Register() {
   }
 
   return (
-    <div className="Register">
-      <div className="Register__wrapper">
-        <div className="Register__fotoContainer">
-          <img className="Register__foto" src="/images/sides/1.jpg" />
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-green-900 to-green-400">
+      <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="md:w-1/2">
+          <img
+            src="/images/sides/1.jpg"
+            alt="side"
+            className="w-full h-full object-cover"
+          />
         </div>
-        <div className="RegisterForm__Container">
-          <div className="RegisterForm__Title">Register Now</div>
-          <form className="RegisterForm" onSubmit={handleSubmit(onSubmit)}>
-            <TextField
+        <div className="md:w-1/2 p-8 flex flex-col justify-center">
+          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center">
+            Register Now
+          </h2>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <input
               type="text"
-              className="RegisterForm__input"
+              placeholder="Username"
+              className="border rounded px-3 py-2 w-full"
               {...register("username", {
                 required: true,
-                maxLength: 20,
                 minLength: 6,
+                maxLength: 20,
               })}
-              aria-invalid={errors.username ? "true" : "false"}
-              error={errors.username}
-              // id="standard-error-helper-text"
-              label="username"
-              defaultValue=""
-              helperText={
-                errors.username ? "Please enter valid username!" : null
-              }
-              variant="standard"
             />
-            <TextField
-              className="RegisterForm__input"
-              type="text"
+            {errors.username && (
+              <span className="text-red-600 text-sm">Invalid username</span>
+            )}
+
+            <input
+              type="email"
+              placeholder="Email"
+              className="border rounded px-3 py-2 w-full"
               {...register("email", {
                 required: true,
-                maxLength: 35,
                 minLength: 10,
+                maxLength: 35,
                 pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
               })}
-              aria-invalid={errors.email ? "true" : "false"}
-              error={errors.email}
-              label="Email"
-              defaultValue=""
-              helperText={errors.email ? "Please enter valid email!" : null}
-              variant="standard"
             />
-            <TextField
-              className="RegisterForm__input"
-              type="text"
+            {errors.email && (
+              <span className="text-red-600 text-sm">Invalid email</span>
+            )}
+
+            <input
+              type="password"
+              placeholder="Password"
+              className="border rounded px-3 py-2 w-full"
               {...register("password", {
                 required: true,
-                maxLength: 35,
                 minLength: 6,
+                maxLength: 35,
                 pattern: /^(?=.*[0-9])(?=.*[A-Z]).{6,}$/,
               })}
-              aria-invalid={errors.password ? "true" : "false"}
-              error={errors.password}
-              id="standard-error-helper-text"
-              label="Password"
-              defaultValue=""
-              helperText={
-                errors.password
-                  ? `Please enter correct password! (Password must be 6 and include capitals and numbers) `
-                  : null
-              }
-              variant="standard"
             />
-            {errors.exampleRequired && <span>This field is required</span>}
-            <Button
-              variant="contained"
-              className="RegisterForm__button"
+            {errors.password && (
+              <span className="text-red-600 text-sm">
+                Password must be at least 6 chars, include a capital letter and
+                a number
+              </span>
+            )}
+
+            <button
               type="submit"
-              value="Register"
+              className="bg-green-400 text-green-900 font-bold py-2 px-4 rounded hover:bg-green-900 hover:text-green-100 transition"
             >
               Register
-            </Button>
+            </button>
           </form>
+
+          {isShowModal && (
+            <div
+              className={`mt-4 p-3 rounded text-center font-semibold ${
+                isModalSuccess
+                  ? "bg-green-200 text-green-900"
+                  : "bg-red-200 text-red-900"
+              }`}
+            >
+              {isModalSuccess ? modalText.success : modalText.fail}
+              <button
+                onClick={() => setIsShowModal(false)}
+                className="ml-4 text-sm underline"
+              >
+                Close
+              </button>
+            </div>
+          )}
         </div>
       </div>
-      <ModalMaterial
-        aria-hidden="false"
-        aria-modal="true"
-        isShowModal={isShowModal}
-        setIsShowModal={setIsShowModal}
-        isModalSuccess={isModalSuccess}
-        modalText={modalText}
-      />
     </div>
   );
 }
-
-// List of validation rules supported:
-// required
-// min
-// max
-// minLength
-// maxLength
-// pattern
-// validate
