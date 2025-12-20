@@ -58,10 +58,10 @@ export default function Topbar() {
             {authContext.isLoggedIn ? (
               <>
                 <NavLink
-                  to="/newproperty"
+                  to="/createProperty"
                   className="px-4 py-2 text-lg transition-colors hover:text-Lemon"
                 >
-                  New property
+                  Create property
                 </NavLink>
                 <NavLink
                   to="/messages"

@@ -2,8 +2,8 @@ import { Routes, Route } from "react-router";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
+import CreateProperty from "../pages/CreateProperty/CreateProperty";
 // import Profile from "../pages/Profile/Profile";
-// import NewProperty from "../pages/NewProperty/NewProperty";
 // import SearchProp from "../pages/SearchProp/SearchProp";
 // import News from "../pages/News/News";
 // import NewsMain from "../pages/NewsMain/NewsMain";
@@ -18,7 +18,7 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       {/* <Route path="/profile" element={<Profile />} /> */}
-      {/* <Route path="/newproperty" element={<NewProperty />} /> */}
+      <Route path="/createProperty" element={<CreateProperty />} />
       {/* <Route
         path="/searchproperty/:city/:type/:contract"
         element={<SearchProp />}
