@@ -1,11 +1,14 @@
 import { useContext } from "react";
 import { useNavigate, NavLink } from "react-router";
 import AuthContext from "../../contexts/AuthContext";
-// import MobileMenue from "../MobileMenue/MobileMenue";
+import TopbarSkeleten from "../Skeletens/TopbarSkeleten/TopbarSkeleten";
 
 export default function Topbar() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
+
+  // show skeleton while auth is loading
+  if (authContext.loading) return <TopbarSkeleten />;
 
   const navbarItems = [
     { id: 1, title: "Home", link: "/" },
