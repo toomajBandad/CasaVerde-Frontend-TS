@@ -1,51 +1,40 @@
-export default function BasicInfoStep({ form, setForm }) {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+import { useFormContext } from "react-hook-form";
+
+export default function BasicInfoStep() {
+  const { register } = useFormContext();
 
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Basic Information</h2>
 
       <input
-        name="title"
-        value={form.title}
-        onChange={handleChange}
+        {...register("title", { required: true })}
         placeholder="Property title"
         className="w-full border p-3 rounded"
       />
 
       <textarea
-        name="desc"
-        value={form.desc}
-        onChange={handleChange}
+        {...register("desc", { required: true })}
         placeholder="Description"
         className="w-full border p-3 rounded"
       />
 
       <input
         type="number"
-        name="price"
-        value={form.price}
-        onChange={handleChange}
+        {...register("price", { required: true, valueAsNumber: true })}
         placeholder="Price"
         className="w-full border p-3 rounded"
       />
 
       <input
-        name="duration"
-        value={form.duration}
-        onChange={handleChange}
+        {...register("duration", { required: true })}
         placeholder="Duration (e.g. monthly)"
         className="w-full border p-3 rounded"
       />
 
       <input
         type="number"
-        name="area"
-        value={form.area}
-        onChange={handleChange}
+        {...register("area", { required: true, valueAsNumber: true })}
         placeholder="Area (m²)"
         className="w-full border p-3 rounded"
       />

@@ -1,66 +1,39 @@
-export default function SpecsStep({ form, setForm }) {
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+import { useFormContext } from "react-hook-form";
+
+export default function SpecsStep() {
+  const { register } = useFormContext();
 
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Specifications</h2>
 
-      <div className="grid grid-cols-2 gap-4">
-        <input
-          type="number"
-          name="bedrooms"
-          value={form.bedrooms}
-          onChange={handleChange}
-          placeholder="Bedrooms"
-          className="border p-3 rounded"
-        />
+      <input
+        type="number"
+        {...register("bedrooms", { required: true, valueAsNumber: true })}
+        placeholder="Number of bedrooms"
+        className="w-full border p-3 rounded"
+      />
 
-        <input
-          type="number"
-          name="bathrooms"
-          value={form.bathrooms}
-          onChange={handleChange}
-          placeholder="Bathrooms"
-          className="border p-3 rounded"
-        />
+      <input
+        type="number"
+        {...register("bathrooms", { required: true, valueAsNumber: true })}
+        placeholder="Number of bathrooms"
+        className="w-full border p-3 rounded"
+      />
+
+      <div className="flex items-center gap-2">
+        <input type="checkbox" {...register("pets")} className="h-4 w-4" />
+        <label>Pets allowed</label>
       </div>
 
-      <div className="flex gap-6">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="pets"
-            checked={form.pets}
-            onChange={handleChange}
-          />
-          Pets allowed
-        </label>
+      <div className="flex items-center gap-2">
+        <input type="checkbox" {...register("couples")} className="h-4 w-4" />
+        <label>Couples allowed</label>
+      </div>
 
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="couples"
-            checked={form.couples}
-            onChange={handleChange}
-          />
-          Couples allowed
-        </label>
-
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="minors"
-            checked={form.minors}
-            onChange={handleChange}
-          />
-          Minors allowed
-        </label>
+      <div className="flex items-center gap-2">
+        <input type="checkbox" {...register("minors")} className="h-4 w-4" />
+        <label>Minors allowed</label>
       </div>
     </div>
   );

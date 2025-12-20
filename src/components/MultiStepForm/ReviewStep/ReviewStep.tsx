@@ -1,57 +1,73 @@
-export default function ReviewStep({ form }) {
+import { useFormContext } from "react-hook-form";
+
+export default function ReviewStep() {
+  const { watch } = useFormContext();
+
+  const data = watch(); // get all form values
+
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Review Your Property</h2>
+      <h2 className="text-xl font-semibold">Review Your Information</h2>
 
-      <div className="space-y-2">
+      <div className="space-y-2 text-gray-700">
         <p>
-          <strong>Title:</strong> {form.title}
+          <strong>Title:</strong> {data.title}
         </p>
         <p>
-          <strong>Description:</strong> {form.desc}
+          <strong>Description:</strong> {data.desc}
         </p>
         <p>
-          <strong>Location:</strong> {form.location}, {form.city}
+          <strong>Price:</strong> {data.price}
         </p>
         <p>
-          <strong>Price:</strong> {form.price}
+          <strong>Duration:</strong> {data.duration}
         </p>
         <p>
-          <strong>Duration:</strong> {form.duration}
+          <strong>Area:</strong> {data.area} m²
+        </p>
+
+        <p>
+          <strong>Location:</strong> {data.location}
         </p>
         <p>
-          <strong>Area:</strong> {form.area} m²
+          <strong>City:</strong> {data.city}
+        </p>
+
+        <p>
+          <strong>Bedrooms:</strong> {data.bedrooms}
         </p>
         <p>
-          <strong>Bedrooms:</strong> {form.bedrooms}
+          <strong>Bathrooms:</strong> {data.bathrooms}
+        </p>
+
+        <p>
+          <strong>Pets allowed:</strong> {data.pets ? "Yes" : "No"}
         </p>
         <p>
-          <strong>Bathrooms:</strong> {form.bathrooms}
+          <strong>Couples allowed:</strong> {data.couples ? "Yes" : "No"}
         </p>
         <p>
-          <strong>Pets:</strong> {form.pets ? "Yes" : "No"}
+          <strong>Minors allowed:</strong> {data.minors ? "Yes" : "No"}
+        </p>
+
+        <p>
+          <strong>Contract type:</strong> {data.contractCategory}
         </p>
         <p>
-          <strong>Couples:</strong> {form.couples ? "Yes" : "No"}
+          <strong>Property type:</strong> {data.typeCategory}
         </p>
-        <p>
-          <strong>Minors:</strong> {form.minors ? "Yes" : "No"}
-        </p>
-        <p>
-          <strong>Contract:</strong> {form.contractCategory}
-        </p>
-        <p>
-          <strong>Type:</strong> {form.typeCategory}
-        </p>
+
+        {data.image && (
+          <div className="mt-4">
+            <strong>Image Preview:</strong>
+            <img
+              src={data.image}
+              alt="Preview"
+              className="w-full h-64 object-cover rounded mt-2"
+            />
+          </div>
+        )}
       </div>
-
-      {form.image && (
-        <img
-          src={form.image}
-          alt="Preview"
-          className="w-full h-48 object-cover rounded"
-        />
-      )}
     </div>
   );
 }

@@ -1,7 +1,23 @@
-export default function MediaStep({ form, setForm }) {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+import { useFormContext } from "react-hook-form";
+import { useState } from "react";
+
+export default function MediaStep() {
+  const { register, setValue, watch } = useFormContext();
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const image = watch("image");
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setValue("image", base64); // store in form
+      setPreview(base64); // local preview
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -9,18 +25,17 @@ export default function MediaStep({ form, setForm }) {
       <h2 className="text-xl font-semibold">Media</h2>
 
       <input
-        name="image"
-        value={form.image}
-        onChange={handleChange}
-        placeholder="Image URL"
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
         className="w-full border p-3 rounded"
       />
 
-      {form.image && (
+      {(preview || image) && (
         <img
-          src={form.image}
+          src={preview || image}
           alt="Preview"
-          className="w-full h-48 object-cover rounded"
+          className="w-full h-64 object-cover rounded"
         />
       )}
     </div>

@@ -40,8 +40,7 @@ export default function Register() {
 
       if (res.ok && result.user) {
         await sendEmailToUser(result.user.id);
-        authContext.login(result.user, result.access_token);
-
+        authContext.login();
         Swal.fire({
           icon: "success",
           title: "Registration Successful",
