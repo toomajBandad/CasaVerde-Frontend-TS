@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AuthContext from "./AuthContext";
 import type { User } from "../types/user";
 import type { Property } from "../types/property";
@@ -10,48 +10,63 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userInfos, setUserInfos] = useState<User | null>(null);
   const [userFavorites, setUserFavorites] = useState<Property[]>([]);
   const [userMessages, setUserMessages] = useState<Message[]>([]);
 
   const apiUrl = import.meta.env.VITE_API_URL as string;
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(`${apiUrl}/users/me`, {
-          credentials: "include", // ✅ send cookie
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.user) {
-            setUserInfos(data.user);
-            setIsLoggedIn(true);
-            setUserFavorites(data.user.favorites || []);
-            setUserMessages(data.user.messages || []);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to restore session:", err);
-      }
-    };
+  // Apply user data to state
+  const applyUserData = useCallback((user: User) => {
+    setUserInfos(user);
+    setUserFavorites(user.favorites || []);
+    setUserMessages(user.messages || []);
+    setIsLoggedIn(true);
+  }, []);
 
-    fetchUser();
-  }, [apiUrl]);
-
-  const login = async () => {
+  // Fetch /me with automatic refresh
+  const fetchUser = useCallback(async () => {
     try {
-      const res = await fetch(`${apiUrl}/users/me`, { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setUserInfos(data.user);
-        setIsLoggedIn(true);
-        setUserFavorites(data.user.favorites || []);
-        setUserMessages(data.user.messages || []);
+      let res = await fetch(`${apiUrl}/users/me`, { credentials: "include" });
+
+      if (res.status === 401) {
+        const refreshRes = await fetch(`${apiUrl}/users/auth/refresh`, {
+          method: "POST",
+          credentials: "include",
+        });
+
+        if (!refreshRes.ok) {
+          throw new Error("Refresh failed");
+        }
+
+        res = await fetch(`${apiUrl}/users/me`, { credentials: "include" });
       }
+
+      if (!res.ok) throw new Error("Failed to fetch user");
+
+      const data = await res.json();
+      applyUserData(data.user);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.error("Failed to fetch user after login:", err);
+      setIsLoggedIn(false);
+      setUserInfos(null);
+      setUserFavorites([]);
+      setUserMessages([]);
+    } finally {
+      setLoading(false);
     }
+  }, [apiUrl, applyUserData]);
+
+  // Restore session on mount
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  // Login simply reuses fetchUser
+  const login = async () => {
+    setLoading(true);
+    await fetchUser();
   };
 
   const logout = async () => {
@@ -63,6 +78,7 @@ export default function AuthProvider({
     } catch (err) {
       console.error("Failed to clear cookie:", err);
     }
+
     setIsLoggedIn(false);
     setUserInfos(null);
     setUserFavorites([]);
@@ -74,7 +90,6 @@ export default function AuthProvider({
   };
 
   const sendMsgToOwner = (msg: Message) => {
-    // implement API call or socket emit here
     console.log("Sending message:", msg);
   };
 
@@ -82,6 +97,7 @@ export default function AuthProvider({
     <AuthContext.Provider
       value={{
         isLoggedIn,
+        loading,
         userInfos,
         userFavorites,
         userMessages,

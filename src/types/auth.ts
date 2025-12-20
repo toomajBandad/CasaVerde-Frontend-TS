@@ -4,11 +4,14 @@ import type { Message } from "./message";
 
 export interface AuthContextType {
   isLoggedIn: boolean;
+  loading: boolean;
   userInfos: User | null;
   userFavorites: Property[];
   userMessages: Message[];
-  login: () => void;
-  logout: () => void;
+
+  login: () => Promise<void>;
+  logout: () => Promise<void>;
+
   sendMsgToOwner: (msg: Message) => void;
-  updateUserInfos: (newUserInfo: Partial<User>) => void;
+  updateUserInfos: (info: Partial<User>) => void;
 }

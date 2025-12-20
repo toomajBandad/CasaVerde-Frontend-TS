@@ -3,11 +3,12 @@ import type { AuthContextType } from "../types/auth";
 
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
+  loading: true,
   userInfos: null,
   userFavorites: [],
   userMessages: [],
-  login: () => {},
-  logout: () => {},
+  login: async () => {},
+  logout: async () => {},
   sendMsgToOwner: () => {},
   updateUserInfos: () => {},
 });
