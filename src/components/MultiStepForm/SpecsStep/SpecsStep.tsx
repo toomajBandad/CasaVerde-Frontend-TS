@@ -1,24 +1,40 @@
 import { useFormContext } from "react-hook-form";
+import MainInput from "../../MainInput/MainInput";
 
 export default function SpecsStep() {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Specifications</h2>
 
-      <input
+      <MainInput
         type="number"
-        {...register("bedrooms", { required: true, valueAsNumber: true })}
         placeholder="Number of bedrooms"
-        className="w-full border p-3 rounded"
+        label="Number of bedrooms"
+        required={true}
+        {...register("bedrooms", {
+          required: "Number of bedrooms is required",
+          min: { value: 0, message: "Minimum is 0" },
+          max: { value: 10, message: "Maximum is 10" },
+        })}
+        error={errors.bedrooms?.message as string}
       />
 
-      <input
+      <MainInput
         type="number"
-        {...register("bathrooms", { required: true, valueAsNumber: true })}
         placeholder="Number of bathrooms"
-        className="w-full border p-3 rounded"
+        label="Number of bathrooms"
+        required={true}
+        {...register("bathrooms", {
+          required: "Number of bathrooms is required",
+          min: { value: 0, message: "Minimum is 0" },
+          max: { value: 10, message: "Maximum is 10" },
+        })}
+        error={errors.bathrooms?.message as string}
       />
 
       <div className="flex items-center gap-2">

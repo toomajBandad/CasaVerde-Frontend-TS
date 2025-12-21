@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, type SubmitHandler } from "react-hook-form";
+
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 import BasicInfoStep from "../BasicInfoStep/BasicInfoStep";
 import LocationStep from "../LocationStep/LocationStep";
@@ -7,6 +10,8 @@ import SpecsStep from "../SpecsStep/SpecsStep";
 import CategoryStep from "../CategoryStep/CategoryStep";
 import MediaStep from "../MediaStep/MediaStep";
 import ReviewStep from "../ReviewStep/ReviewStep";
+import MainBtn from "../../MainBtn/MainBtn";
+import { uploadImage } from "../../../utils/uploadImage";
 
 export type PropertyForm = {
   title: string;
@@ -14,7 +19,7 @@ export type PropertyForm = {
   location: string;
   city: string;
   price: number;
-  duration: string;
+  duration: number;
   bedrooms: number;
   bathrooms: number;
   pets: boolean;
@@ -24,10 +29,16 @@ export type PropertyForm = {
   typeCategory: string;
   area: number;
   image: string;
+  imageFile?: File | null;
 };
 
 export default function ParentForm() {
+  const apiUrl = import.meta.env.VITE_API_URL as string;
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [validationTick, setValidationTick] = useState(0);
 
   const methods = useForm<PropertyForm>({
     defaultValues: {
@@ -36,7 +47,7 @@ export default function ParentForm() {
       location: "",
       city: "",
       price: 0,
-      duration: "",
+      duration: 0,
       bedrooms: 0,
       bathrooms: 1,
       pets: false,
@@ -46,7 +57,12 @@ export default function ParentForm() {
       typeCategory: "",
       area: 0,
       image: "",
+      imageFile: null,
     },
+    mode: "onTouched",
+    reValidateMode: "onBlur",
+    criteriaMode: "all",
+    shouldFocusError: true,
   });
 
   const stepConfig = [
@@ -61,51 +77,91 @@ export default function ParentForm() {
   const StepComponent = stepConfig[step].component;
 
   const next = async () => {
-    const valid = await methods.trigger();
-    if (valid) setStep((s) => s + 1);
+    const valid = await methods.trigger(undefined, { shouldFocus: true });
+
+    if (!valid) {
+      setValidationTick((t) => t + 1); // force re-render to show errors
+      return;
+    }
+
+    setStep((s) => s + 1);
   };
 
   const back = () => setStep((s) => s - 1);
 
-  const onSubmit = (data: PropertyForm) => {
-    console.log("Submitting:", data);
-    // axios.post("/api/properties", data)
+  const onSubmit: SubmitHandler<PropertyForm> = async (formDatas) => {
+    setLoading(true);
+    console.log(formDatas);
+
+    try {
+      let finalImageUrl = null;
+      if (formDatas.imageFile) {
+        finalImageUrl = await uploadImage(formDatas.imageFile);
+      }
+
+      const payload = {
+        ...formDatas,
+        image: finalImageUrl,
+      };
+
+      delete payload.imageFile;
+
+      const res = await fetch(`${apiUrl}/properties`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload), // ✅ send final payload
+      });
+
+      let result = {};
+      try {
+        result = await res.json();
+      } catch {}
+
+      if (res.ok && (result as any).property) {
+        Swal.fire({
+          icon: "success",
+          title: "Added Property Successfully",
+          text: "Your property has been added to Casa Verde.",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => navigate("/"));
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Adding Property Failed",
+          text: (result as any).message || "Please try again later.",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Something went wrong. Please try again later.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow"
-      >
-        <StepComponent />
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="w-full px-5">
+        <StepComponent key={step + "-" + validationTick} />
 
         <div className="flex justify-between mt-6">
           {step > 0 && (
-            <button
-              type="button"
-              onClick={back}
-              className="px-4 py-2 bg-gray-200 rounded"
-            >
+            <MainBtn onClick={back} type="button" disabled={loading}>
               Back
-            </button>
+            </MainBtn>
           )}
 
           {step < stepConfig.length - 1 ? (
-            <button
-              type="button"
-              onClick={next}
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Next
-            </button>
+            <MainBtn onClick={next} type="button" disabled={loading}>
+              {loading ? "Loading..." : "Next"}
+            </MainBtn>
           ) : (
-            <button
-              type="submit"
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Submit
-            </button>
+            <></>
           )}
         </div>
       </form>

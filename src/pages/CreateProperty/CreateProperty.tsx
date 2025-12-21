@@ -1,14 +1,22 @@
+import MainTitle from "../../components/MainTitle/MainTitle";
 import ParentForm from "../../components/MultiStepForm/ParentForm/ParentForm";
 
 export default function CreateProperty() {
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-semibold mb-8 text-center">
-          Add a New Property
-        </h1>
+    <div className="min-h-screen bg-linear-to-br from-teal-500 via-teal-200 to-teal-200 pt-30 pb-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 items-start px-4">
+        <div className="hidden md:block">
+          <img
+            src="/images/sides/1.jpg" //
+            alt="Property illustration"
+            className="w-full h-full object-cover rounded-tl-8xl rounded-bl-8xl shadow-lg"
+          />
+        </div>
 
-        <ParentForm />
+        <div className="bg-white p-10 h-full flex flex-col justify-center items-center rounded-tr-8xl rounded-br-8xl shadow-lg">
+          <MainTitle>Add a New Property</MainTitle>
+          <ParentForm />
+        </div>
       </div>
     </div>
   );

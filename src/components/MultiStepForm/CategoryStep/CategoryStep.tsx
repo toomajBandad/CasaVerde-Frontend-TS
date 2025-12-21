@@ -1,7 +1,10 @@
 import { useFormContext } from "react-hook-form";
 
 export default function CategoryStep() {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="space-y-4">
@@ -16,6 +19,9 @@ export default function CategoryStep() {
         <option value="sale">Sale</option>
         <option value="temporary">Temporary</option>
       </select>
+      {errors.contractCategory && (
+        <p className="text-sm text-red-500">Contract type is required</p>
+      )}
 
       <select
         {...register("typeCategory", { required: true })}
@@ -27,6 +33,9 @@ export default function CategoryStep() {
         <option value="room">Room</option>
         <option value="house">House</option>
       </select>
+      {errors.typeCategory && (
+        <p className="text-sm text-red-500">Property type is required</p>
+      )}
     </div>
   );
 }

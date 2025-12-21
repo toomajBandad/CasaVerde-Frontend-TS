@@ -1,4 +1,5 @@
 import { useFormContext } from "react-hook-form";
+import MainBtn from "../../MainBtn/MainBtn";
 
 export default function ReviewStep() {
   const { watch } = useFormContext();
@@ -67,6 +68,7 @@ export default function ReviewStep() {
             />
           </div>
         )}
+        <MainBtn type="submit">Submit</MainBtn>
       </div>
     </div>
   );
