@@ -15,9 +15,9 @@ export default function CategoryStep() {
         className="w-full border p-3 rounded"
       >
         <option value="">Select contract type</option>
-        <option value="rent">Rent</option>
-        <option value="sale">Sale</option>
-        <option value="temporary">Temporary</option>
+        <option value="BUY">BUY</option>
+        <option value="RENT">RENT</option>
+        <option value="SHARE">SHARE</option>
       </select>
       {errors.contractCategory && (
         <p className="text-sm text-red-500">Contract type is required</p>
@@ -28,10 +28,10 @@ export default function CategoryStep() {
         className="w-full border p-3 rounded"
       >
         <option value="">Select property type</option>
-        <option value="apartment">Apartment</option>
-        <option value="studio">Studio</option>
-        <option value="room">Room</option>
-        <option value="house">House</option>
+        <option value="Apartment">Apartment</option>
+        <option value="Villa">Villa</option>
+        <option value="Room">Room</option>
+        <option value="Flat">Flat</option>
       </select>
       {errors.typeCategory && (
         <p className="text-sm text-red-500">Property type is required</p>

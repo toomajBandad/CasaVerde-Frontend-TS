@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm, FormProvider, type SubmitHandler } from "react-hook-form";
 
 import Swal from "sweetalert2";
@@ -12,6 +12,7 @@ import MediaStep from "../MediaStep/MediaStep";
 import ReviewStep from "../ReviewStep/ReviewStep";
 import MainBtn from "../../MainBtn/MainBtn";
 import { uploadImage } from "../../../utils/uploadImage";
+import AuthContext from "../../../contexts/AuthContext";
 
 export type PropertyForm = {
   title: string;
@@ -30,11 +31,13 @@ export type PropertyForm = {
   area: number;
   image: string;
   imageFile?: File | null;
+  owner?: string;
 };
 
 export default function ParentForm() {
   const apiUrl = import.meta.env.VITE_API_URL as string;
   const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
 
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -58,6 +61,7 @@ export default function ParentForm() {
       area: 0,
       image: "",
       imageFile: null,
+      owner: authContext.userInfos?.id || "",
     },
     mode: "onTouched",
     reValidateMode: "onBlur",
@@ -102,6 +106,7 @@ export default function ParentForm() {
       const payload = {
         ...formDatas,
         image: finalImageUrl,
+        owner: authContext.userInfos?.id || "",
       };
 
       delete payload.imageFile;
@@ -109,15 +114,17 @@ export default function ParentForm() {
       const res = await fetch(`${apiUrl}/properties`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload), // ✅ send final payload
+        body: JSON.stringify(payload),
       });
 
       let result = {};
       try {
         result = await res.json();
-      } catch {}
+      } catch {
+        console.log(result);
+      }
 
-      if (res.ok && (result as any).property) {
+      if (res.ok) {
         Swal.fire({
           icon: "success",
           title: "Added Property Successfully",
@@ -129,7 +136,7 @@ export default function ParentForm() {
         Swal.fire({
           icon: "error",
           title: "Adding Property Failed",
-          text: (result as any).message || "Please try again later.",
+          text: "Please try again later.",
         });
       }
     } catch (err) {

@@ -52,7 +52,7 @@ export default function BasicInfoStep() {
       />
 
       <MainInput
-        type="text"
+        type="number"
         placeholder="Duration (e.g. monthly)"
         label="Duration (e.g. monthly)"
         required={true}
