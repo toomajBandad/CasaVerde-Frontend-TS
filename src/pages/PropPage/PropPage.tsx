@@ -1,146 +1,202 @@
-import React, { useEffect, useState } from "react";
-import "./PropPage.css";
-import { useParams } from "react-router";
-import ShowPropMap from "../../component-backup/ShowPropMap/ShowPropMap";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { FaBath, FaBed, FaCity } from "react-icons/fa";
+import { GiMoneyStack, GiDuration } from "react-icons/gi";
+import { MdPets, MdChildCare } from "react-icons/md";
 import { LiaVenusMarsSolid } from "react-icons/lia";
-import { FaCity } from "react-icons/fa";
-import { FaBath } from "react-icons/fa";
-import { FaBed } from "react-icons/fa";
-import { GiMoneyStack } from "react-icons/gi";
-import { MdPets } from "react-icons/md";
-import { MdChildCare } from "react-icons/md";
 import { IoLocation } from "react-icons/io5";
-import { LuScrollText } from "react-icons/lu";
-import { GiDuration } from "react-icons/gi";
-import { FaHouseUser } from "react-icons/fa";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { BiCategory } from "react-icons/bi";
 import { TbMeterSquare } from "react-icons/tb";
+// import ShowPropMap from "../../component-backup/ShowPropMap/ShowPropMap";
 import nofoto from "/images/properties/noimage.png";
 
+type LatLng = {
+  lat: number;
+  lng: number;
+};
+
+type Category = {
+  _id: string;
+  name: string;
+};
+
+type Property = {
+  _id: string;
+  title: string;
+  desc: string;
+  image?: string;
+  city: string;
+  location: string;
+  price: number;
+  duration: string;
+  bedrooms: number;
+  bathrooms: number;
+  pets: boolean;
+  couples: boolean;
+  minors: boolean;
+  area: number;
+  latlng?: LatLng;
+  createdAt: string;
+  typeCategory?: Category;
+  contractCategory?: Category;
+};
+
+type RouteParams = {
+  propId: string;
+};
+
 export default function PropPage() {
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL as string;
+  const { propId } = useParams<RouteParams>();
 
-  const params = useParams();
-
-  const [propData, setPropData] = useState("");
-  const [propId, setPropId] = useState("");
-  const [createdDate, setCreatedDate] = useState("");
+  const [propData, setPropData] = useState<Property | null>(null);
+  const [createdDate, setCreatedDate] = useState<string>("");
 
   useEffect(() => {
-    setPropId(params.propId);
-  }, [params.propId]);
+    if (!propId) return;
 
-  useEffect(() => {
-    if (propId) {
-      fetch(`${apiUrl}/properties/${propId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setPropData(data);
-          createDate(data.createdAt);
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [propId]);
+    const fetchProperty = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/properties/${propId}`);
+        const data: Property = await res.json();
+        setPropData(data);
+        formatDate(data.createdAt);
+      } catch (error) {
+        console.error("Failed to fetch property:", error);
+      }
+    };
 
-  function createDate() {
-    const isoString = "2025-06-26T23:37:50.641Z";
-    const date = new Date(isoString);
+    fetchProperty();
+  }, [apiUrl, propId]);
 
-    // Options for formatting
-    const options = {
+  function formatDate(iso: string) {
+    const date = new Date(iso);
+    const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "long",
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     };
-    setCreatedDate(date.toLocaleString(undefined, options));
+    setCreatedDate(date.toLocaleDateString(undefined, options));
+  }
+
+  if (!propData) {
+    return (
+      <div className="flex justify-center items-center h-screen text-gray-600">
+        Loading property...
+      </div>
+    );
   }
 
   return (
-    <div className="PropPage">
-      <div className="PropPage__container">
-        <div className="PropPage__imgWrapper">
+    <div className="w-full px-20 pt-24 space-y-10 bg-linear-to-br from-teal-700 via-teal-600 to-teal-400">
+      {/* MAIN LAYOUT: IMAGE LEFT, DETAILS RIGHT */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* LEFT: IMAGE */}
+        <div className="w-full h-72 sm:h-96 md:h-full rounded-xl overflow-hidden shadow-lg">
           <img
-            className="PropPage__image"
-            src={propData.image ? propData.image : nofoto}
-            alt=""
+            src={propData.image || nofoto}
+            alt={propData.title}
+            className="w-full h-full object-cover"
           />
         </div>
-        <div className="PropPage__body">
-          <h3 className="PropPage__Title">{propData.title}</h3>
-          <p className="PropPage__Sub">{propData.desc}</p>
-          <div className="PropPage__body__Wrapper">
-            <div className="PropPage__body__left">
-              <p className="propPage__text">
-                <BiCategory className="propPage__icon" />
-                {propData.typeCategory ? propData.typeCategory.name : null}{" "}
-                Category
-              </p>
-              <p className="propPage__text">
-                <FaBath className="propPage__icon" />
-                {propData.bathrooms} bathrooms
-              </p>
-              <p className="propPage__text">
-                <FaBed className="propPage__icon" />
-                {propData.bedrooms} bedrooms
-              </p>
-              <p className="propPage__text">
-                <FaCity className="propPage__icon" />
-                {propData.city} City
-              </p>
-              <p className="propPage__text">
-                <BiCategory className="propPage__icon" /> Type the contract is{" "}
-                {propData.contractCategory
-                  ? propData.contractCategory.name
-                  : null}{" "}
-              </p>
 
-              <p className="propPage__text">
-                <GiMoneyStack className="propPage__icon" />
-                {propData.price}$/month
-              </p>
-              <p className="propPage__text">
-                <BsCalendarDateFill className="propPage__icon" />
-                Registered at: <br /> {createdDate}
-              </p>
-            </div>
-            <div className="PropPage__body__right">
-              <p className="propPage__text">
-                <TbMeterSquare className="propPage__icon" />
-                {propData.area} square meters area
-              </p>
-              <p className="propPage__text">
-                <GiDuration className="propPage__icon" />
-                {propData.duration} duration
-              </p>
-              <p className="propPage__text">
-                <IoLocation className="propPage__icon" />
-                located in {propData.location}
-              </p>
-              <p className="propPage__text">
-                <MdChildCare className="propPage__icon" />
-                minors{" "}
-                {propData.minors === "true" ? "permited" : "not permited"}
-              </p>
-              {/* <p className="propPage__text"><FaHouseUser  className="propPage__icon"/>owner : {propData.owner}</p> */}
-              <p className="propPage__text">
-                <MdPets className="propPage__icon" />
-                pets {propData.pets === "true" ? "permited" : "not permited"}
-              </p>
-              <p className="propPage__text">
-                <LiaVenusMarsSolid className="propPage__icon" />
-                couples{" "}
-                {propData.couples === "true" ? "permited" : "not permited"}
-              </p>
-            </div>
+        {/* RIGHT: DETAILS */}
+        <div className="space-y-6">
+          {/* Title + Description */}
+          <div className="space-y-2">
+            <h1 className="text-3xl font-semibold text-gray-900">
+              {propData.title}
+            </h1>
+            <p className="text-gray-600 text-lg">{propData.desc}</p>
+          </div>
+
+          {/* Property Details */}
+          <div className="bg-white p-6 rounded-xl shadow space-y-4">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Property Details
+            </h2>
+
+            <Detail
+              icon={<BiCategory />}
+              text={`${propData.typeCategory?.name ?? "Unknown"} Category`}
+            />
+            <Detail
+              icon={<FaBath />}
+              text={`${propData.bathrooms} Bathrooms`}
+            />
+            <Detail icon={<FaBed />} text={`${propData.bedrooms} Bedrooms`} />
+            <Detail icon={<FaCity />} text={propData.city} />
+            <Detail
+              icon={<BiCategory />}
+              text={`Contract: ${propData.contractCategory?.name ?? "Unknown"}`}
+            />
+            <Detail icon={<GiMoneyStack />} text={`${propData.price}$/month`} />
+            <Detail
+              icon={<BsCalendarDateFill />}
+              text={`Registered on ${createdDate}`}
+            />
+          </div>
+
+          {/* Additional Info */}
+          <div className="bg-white p-6 rounded-xl shadow space-y-4">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Additional Info
+            </h2>
+
+            <Detail
+              icon={<TbMeterSquare />}
+              text={`${propData.area} m² area`}
+            />
+            <Detail
+              icon={<GiDuration />}
+              text={`${propData.duration} duration`}
+            />
+            <Detail
+              icon={<IoLocation />}
+              text={`Located in ${propData.location}`}
+            />
+
+            <Detail
+              icon={<MdChildCare />}
+              text={`Minors: ${
+                propData.minors ? "Permitted" : "Not permitted"
+              }`}
+            />
+            <Detail
+              icon={<MdPets />}
+              text={`Pets: ${propData.pets ? "Permitted" : "Not permitted"}`}
+            />
+            <Detail
+              icon={<LiaVenusMarsSolid />}
+              text={`Couples: ${
+                propData.couples ? "Permitted" : "Not permitted"
+              }`}
+            />
           </div>
         </div>
-        <div className="PropPage__imgWrapper">
-          {propData.latlng ? <ShowPropMap mapCenter={propData.latlng} /> : null}
-        </div>
       </div>
+
+      {/* MAP */}
+      {/* {propData.latlng && (
+        <div className="w-full h-80 rounded-xl overflow-hidden shadow">
+          <ShowPropMap mapCenter={propData.latlng} />
+        </div>
+      )} */}
     </div>
+  );
+}
+
+type DetailProps = {
+  icon: JSX.Element;
+  text: string;
+};
+
+function Detail({ icon, text }: DetailProps) {
+  return (
+    <p className="flex items-center gap-3 text-gray-700 text-lg">
+      <span className="text-teal-600 text-2xl">{icon}</span>
+      {text}
+    </p>
   );
 }

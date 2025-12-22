@@ -10,12 +10,12 @@ import Favorites from "../pages/Profile/Favorites";
 import MyProperties from "../pages/Profile/MyProperties";
 import Messages from "../pages/Profile/Messages";
 import Setting from "../pages/Profile/Setting";
+import PropPage from "../pages/PropPage/PropPage";
 // import SearchProp from "../pages/SearchProp/SearchProp";
 // import News from "../pages/News/News";
 // import NewsMain from "../pages/NewsMain/NewsMain";
 // import About from "../pages/About/About";
 // import Messages from "../pages/Messages/Messages";
-// import PropPage from "../pages/PropPage/PropPage";
 
 export default function AppRoutes() {
   return (
@@ -39,8 +39,8 @@ export default function AppRoutes() {
       <Route path="/news" element={<NewsMain />} />
       <Route path="/news/:newsId" element={<News />} />
       <Route path="/about" element={<About />} />
-      <Route path="/messages" element={<Messages />} />
-      <Route path="/property/:propId" element={<PropPage />} /> */}
+      <Route path="/messages" element={<Messages />} /> */}
+      <Route path="/property/:propId" element={<PropPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
