@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useContext } from "react";
+import AuthContext from "../../contexts/AuthContext";
 
 interface Conversation {
   id: number;
@@ -14,6 +16,12 @@ interface Message {
 }
 
 export default function Messages() {
+  const authContext = useContext(AuthContext);
+  const userData = authContext.userInfos;
+  const userFavorites = authContext.userFavorites;
+  const userProperties = authContext.userProperties;
+  const userMessages = authContext.userMessages;
+
   const conversations: Conversation[] = [
     { id: 1, name: "Alice Johnson", lastMessage: "Thanks! I'll check it out." },
     {

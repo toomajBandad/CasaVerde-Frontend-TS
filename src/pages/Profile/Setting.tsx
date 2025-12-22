@@ -1,4 +1,13 @@
+import { useContext } from "react";
+import AuthContext from "../../contexts/AuthContext";
+
 export default function Setting() {
+  const authContext = useContext(AuthContext);
+  const userData = authContext.userInfos;
+  const userFavorites = authContext.userFavorites;
+  const userProperties = authContext.userProperties;
+  const userMessages = authContext.userMessages;
+
   return (
     <div className="space-y-10">
       <h1 className="text-2xl font-semibold text-gray-800">Settings</h1>

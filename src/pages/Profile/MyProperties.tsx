@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../../contexts/AuthContext";
 
 export default function MyProperties() {
+  const authContext = useContext(AuthContext);
+  const userData = authContext.userInfos;
+  const userFavorites = authContext.userFavorites;
+  const userProperties = authContext.userProperties;
+  const userMessages = authContext.userMessages;
   // Mock data — replace with real properties from backend
   const myProperties = [
     {
