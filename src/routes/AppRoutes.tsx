@@ -3,6 +3,7 @@ import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import CreateProperty from "../pages/CreateProperty/CreateProperty";
+import NotFound from "../pages/NotFound/NotFound";
 // import Profile from "../pages/Profile/Profile";
 // import SearchProp from "../pages/SearchProp/SearchProp";
 // import News from "../pages/News/News";
@@ -28,6 +29,7 @@ export default function AppRoutes() {
       <Route path="/about" element={<About />} />
       <Route path="/messages" element={<Messages />} />
       <Route path="/property/:propId" element={<PropPage />} /> */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
