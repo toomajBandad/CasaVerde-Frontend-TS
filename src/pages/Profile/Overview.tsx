@@ -14,15 +14,15 @@ export default function Overview() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <img
-            src={userData?.profile?.image}
+            src={userData?.profile?.image || "/default-avatar.png"}
             alt="User Avatar"
             className="w-20 h-20 rounded-full shadow-md"
           />
           <div>
             <h1 className="text-2xl font-semibold text-gray-800">
-              Welcome back, {userData?.username}
+              Welcome back, {userData?.username || "User"}!
             </h1>
-            <p className="text-gray-500">{userData?.email}</p>
+            <p className="text-gray-500">{userData?.email || "No email"}</p>
           </div>
         </div>
       </div>

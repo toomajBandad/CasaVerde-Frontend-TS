@@ -125,13 +125,9 @@ export default function ParentForm() {
       }
 
       if (res.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Added Property Successfully",
-          text: "Your property has been added to Casa Verde.",
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => navigate("/"));
+        authContext.updateUserInfos();
+
+        navigate("/profile");
       } else {
         Swal.fire({
           icon: "error",

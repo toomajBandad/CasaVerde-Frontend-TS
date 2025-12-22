@@ -89,8 +89,8 @@ export default function AuthProvider({
     setUserProperties([]);
   };
 
-  const updateUserInfos = (newUserInfo: Partial<User>) => {
-    setUserInfos((prev) => (prev ? { ...prev, ...newUserInfo } : null));
+  const updateUserInfos = () => {
+    fetchUser();
   };
 
   const sendMsgToOwner = (msg: Message) => {

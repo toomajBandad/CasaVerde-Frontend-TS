@@ -82,7 +82,7 @@ export default function ProfileLayout() {
 
       {/* Dynamic content */}
       <main className="flex-1 p-6 md:p-10">
-        <div className="bg-white rounded-xl shadow-md p-6 min-h-[70vh]">
+        <div className="bg-white rounded-xl shadow-md px-6 pt-20 min-h-[70vh]">
           <Outlet />
         </div>
       </main>

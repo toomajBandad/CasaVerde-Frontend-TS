@@ -14,5 +14,5 @@ export interface AuthContextType {
   logout: () => Promise<void>;
 
   sendMsgToOwner: (msg: Message) => void;
-  updateUserInfos: (info: Partial<User>) => void;
+  updateUserInfos: () => void;
 }
