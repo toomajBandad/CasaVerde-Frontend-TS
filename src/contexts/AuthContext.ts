@@ -7,6 +7,7 @@ const AuthContext = createContext<AuthContextType>({
   userInfos: null,
   userFavorites: [],
   userMessages: [],
+  userProperties: [],
   login: async () => {},
   logout: async () => {},
   sendMsgToOwner: () => {},

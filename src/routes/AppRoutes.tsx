@@ -4,7 +4,12 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import CreateProperty from "../pages/CreateProperty/CreateProperty";
 import NotFound from "../pages/NotFound/NotFound";
-// import Profile from "../pages/Profile/Profile";
+import ProfileLayout from "../pages/Profile/ProfileLayout";
+import Overview from "../pages/Profile/Overview";
+import Favorites from "../pages/Profile/Favorites";
+import MyProperties from "../pages/Profile/MyProperties";
+import Messages from "../pages/Profile/Messages";
+import Setting from "../pages/Profile/Setting";
 // import SearchProp from "../pages/SearchProp/SearchProp";
 // import News from "../pages/News/News";
 // import NewsMain from "../pages/NewsMain/NewsMain";
@@ -18,7 +23,14 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      {/* <Route path="/profile" element={<Profile />} /> */}
+      <Route path="/profile" element={<ProfileLayout />}>
+        <Route index element={<Overview />} />
+        <Route path="favorites" element={<Favorites />} />
+        <Route path="properties" element={<MyProperties />} />
+        <Route path="messages" element={<Messages />} />
+        <Route path="settings" element={<Setting />} />
+      </Route>
+
       <Route path="/createProperty" element={<CreateProperty />} />
       {/* <Route
         path="/searchproperty/:city/:type/:contract"

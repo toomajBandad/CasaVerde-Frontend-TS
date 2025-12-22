@@ -14,6 +14,7 @@ export default function AuthProvider({
   const [userInfos, setUserInfos] = useState<User | null>(null);
   const [userFavorites, setUserFavorites] = useState<Property[]>([]);
   const [userMessages, setUserMessages] = useState<Message[]>([]);
+  const [userProperties, setUserProperties] = useState<Property[]>([]);
 
   const apiUrl = import.meta.env.VITE_API_URL as string;
 
@@ -22,6 +23,7 @@ export default function AuthProvider({
     setUserInfos(user);
     setUserFavorites(user.favorites || []);
     setUserMessages(user.messages || []);
+    setUserProperties(user.listings || []);
     setIsLoggedIn(true);
   }, []);
 
@@ -53,6 +55,7 @@ export default function AuthProvider({
       setUserInfos(null);
       setUserFavorites([]);
       setUserMessages([]);
+      setUserProperties([]);
     } finally {
       setLoading(false);
     }
@@ -83,6 +86,7 @@ export default function AuthProvider({
     setUserInfos(null);
     setUserFavorites([]);
     setUserMessages([]);
+    setUserProperties([]);
   };
 
   const updateUserInfos = (newUserInfo: Partial<User>) => {
@@ -101,6 +105,7 @@ export default function AuthProvider({
         userInfos,
         userFavorites,
         userMessages,
+        userProperties,
         login,
         logout,
         sendMsgToOwner,

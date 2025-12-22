@@ -8,6 +8,7 @@ export interface AuthContextType {
   userInfos: User | null;
   userFavorites: Property[];
   userMessages: Message[];
+  userProperties: Property[];
 
   login: () => Promise<void>;
   logout: () => Promise<void>;

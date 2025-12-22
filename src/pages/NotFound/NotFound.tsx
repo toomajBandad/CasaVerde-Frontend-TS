@@ -18,7 +18,7 @@ export default function NotFound() {
 
         <Link
           to="/"
-          className="inline-block mt-8 px-6 py-3 bg-white text-teal-700 font-medium rounded-lg shadow-md hover:bg-teal-50 transition-all"
+          className="inline-block mt-8 px-6 py-3 bg-white text-teal-700 font-medium rounded-lg shadow-md hover:bg-teal-100 transition-all"
         >
           Go Back Home
         </Link>
