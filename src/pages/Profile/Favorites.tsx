@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
 import PropertyCard from "../../components/PropertyCard/PropertyCard";
+import type { Property } from "../../types/property";
 
 export default function Favorites() {
   const authContext = useContext(AuthContext);
@@ -24,16 +25,16 @@ export default function Favorites() {
       )}
 
       {/* Favorites grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {userFavorites.map((property: any) => (
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {userFavorites.map((property: Property) => (
           <PropertyCard
             key={property._id}
             id={property._id}
             title={property.title}
             price={property.price}
-            image={property.image}
+            image={property.image as string}
             location={property.location}
-            rooms={property.rooms}
+            rooms={property.bedrooms}
             area={property.area}
             description={property.desc}
           />

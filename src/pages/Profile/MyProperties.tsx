@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
 import PropertyCard from "../../components/PropertyCard/PropertyCard";
+import type { Property } from "../../types/property";
 
 export default function MyProperties() {
   const { userProperties = [] } = useContext(AuthContext);
@@ -30,8 +31,8 @@ export default function MyProperties() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {userProperties.map((property) => (
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {userProperties.map((property: Property) => (
           <PropertyCard
             key={property._id}
             id={property._id}
