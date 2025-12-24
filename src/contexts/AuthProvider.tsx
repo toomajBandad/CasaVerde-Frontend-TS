@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import AuthContext from "./AuthContext";
 import type { User } from "../types/user";
-import type { Property } from "../types/property";
 import type { Message } from "../types/message";
+import { addFavorite, removeFavorite } from "../services/favoritesService";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export default function AuthProvider({
   children,
@@ -12,18 +14,12 @@ export default function AuthProvider({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userInfos, setUserInfos] = useState<User | null>(null);
-  const [userFavorites, setUserFavorites] = useState<Property[]>([]);
-  const [userMessages, setUserMessages] = useState<Message[]>([]);
-  const [userProperties, setUserProperties] = useState<Property[]>([]);
 
   const apiUrl = import.meta.env.VITE_API_URL as string;
 
   // Apply user data to state
   const applyUserData = useCallback((user: User) => {
     setUserInfos(user);
-    setUserFavorites(user.favorites || []);
-    setUserMessages(user.messages || []);
-    setUserProperties(user.listings || []);
     setIsLoggedIn(true);
   }, []);
 
@@ -53,9 +49,6 @@ export default function AuthProvider({
     } catch (err) {
       setIsLoggedIn(false);
       setUserInfos(null);
-      setUserFavorites([]);
-      setUserMessages([]);
-      setUserProperties([]);
     } finally {
       setLoading(false);
     }
@@ -73,6 +66,7 @@ export default function AuthProvider({
   };
 
   const logout = async () => {
+    setLoading(true);
     try {
       await fetch(`${apiUrl}/users/auth/logout`, {
         method: "POST",
@@ -81,16 +75,53 @@ export default function AuthProvider({
     } catch (err) {
       console.error("Failed to clear cookie:", err);
     }
-
     setIsLoggedIn(false);
     setUserInfos(null);
-    setUserFavorites([]);
-    setUserMessages([]);
-    setUserProperties([]);
+    setLoading(false);
   };
 
-  const updateUserInfos = () => {
-    fetchUser();
+  const updateUserInfos = async () => {
+    await fetchUser();
+  };
+
+  const toggleFavorite = async (propertyId: string | number) => {
+    if (!userInfos?.id) {
+      toast.error("Please log in to save favorites");
+      return;
+    }
+
+    const userId = userInfos.id;
+    const isFavorited = userInfos.favorites?.some((f) => f._id === propertyId);
+
+    if (isFavorited) {
+      const result = await Swal.fire({
+        title: "Remove from favorites?",
+        text: "This property is already in your favorites. Do you want to remove it?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, remove it!",
+      });
+
+      if (!result.isConfirmed) return;
+
+      try {
+        await removeFavorite(userId, propertyId);
+        toast.success("Property removed from favorites!");
+        await updateUserInfos();
+      } catch {
+        toast.error("Failed to remove property from favorites.");
+      }
+
+      return;
+    }
+
+    try {
+      await addFavorite(userId, propertyId);
+      toast.success("Property added to favorites!");
+      await updateUserInfos();
+    } catch {
+      toast.error("Failed to add property to favorites.");
+    }
   };
 
   const sendMsgToOwner = (msg: Message) => {
@@ -103,13 +134,14 @@ export default function AuthProvider({
         isLoggedIn,
         loading,
         userInfos,
-        userFavorites,
-        userMessages,
-        userProperties,
+        userFavorites: userInfos?.favorites ?? [],
+        userMessages: userInfos?.messages ?? [],
+        userProperties: userInfos?.listings ?? [],
         login,
         logout,
-        sendMsgToOwner,
         updateUserInfos,
+        toggleFavorite,
+        sendMsgToOwner,
       }}
     >
       {children}

@@ -15,4 +15,5 @@ export interface AuthContextType {
 
   sendMsgToOwner: (msg: Message) => void;
   updateUserInfos: () => void;
+  toggleFavorite: (propertyId: string | number) => void;
 }

@@ -12,6 +12,7 @@ const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
   sendMsgToOwner: () => {},
   updateUserInfos: () => {},
+  toggleFavorite: () => {},
 });
 
 export default AuthContext;

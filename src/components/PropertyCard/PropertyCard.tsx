@@ -7,8 +7,7 @@ import {
 } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
-import { useContext } from "react";
-import { toast } from "react-toastify";
+import { useContext, useMemo } from "react";
 
 interface PropertyCardProps {
   id: string | number;
@@ -31,48 +30,25 @@ export default function PropertyCard({
   area,
   description,
 }: PropertyCardProps) {
-  const apiUrl = import.meta.env.VITE_API_URL as string;
+  const navigate = useNavigate();
+  const { userFavorites, toggleFavorite } = useContext(AuthContext);
+
+  const isFavorited = useMemo(
+    () => userFavorites.some((f) => f._id === id),
+    [userFavorites, id]
+  );
 
   const shortDescription =
     description.length > 90 ? description.slice(0, 90) + "..." : description;
-
-  const navigate = useNavigate();
-  const authContext = useContext(AuthContext);
-  const userId = authContext?.userInfos?.id;
-  const isFavorited = authContext?.userInfos?.favorites?.some(
-    (property) => property._id === id
-  );
 
   const navigateToProperty = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     navigate(`/property/${id}`);
   };
 
-  const handleAddToFavorites = async (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleFavoriteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-
-    if (!userId) {
-      toast.error("Please log in to save favorites");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${apiUrl}/users/${userId}/favorites`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ propertyId: id }),
-      });
-
-      if (!response.ok) throw new Error("Failed to add favorite");
-
-      toast.success("Property added to favorites!");
-      authContext.updateUserInfos();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to add property to favorites.");
-    }
+    toggleFavorite(id);
   };
 
   const handleContactOwner = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -145,7 +121,7 @@ export default function PropertyCard({
               <button
                 className="  py-2 px-4 bg-gray-200 text-gray-800  hover:bg-gray-300 transition duration-400 cursor-pointer"
                 title="Add to Favorites"
-                onClick={handleAddToFavorites}
+                onClick={handleFavoriteClick}
               >
                 {isFavorited ? (
                   <BiSolidHeart className="text-red-500" />
