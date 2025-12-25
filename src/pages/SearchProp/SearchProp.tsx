@@ -11,183 +11,118 @@ import type { Property } from "../../types/property";
 import type { TypeCategory } from "../../types/typeCategory";
 import type { ContractCategory } from "../../types/contractCategory";
 import type { City } from "../../types/city";
+
+import SearchFilters from "../../components/SearchFilters/SearchFilters";
 import PropertyCard from "../../components/PropertyCard/PropertyCard";
+
+interface Filters {
+  contract: string;
+  type: string;
+  city: string;
+  priceMin: number;
+  priceMax: number;
+  areaMin: number;
+  areaMax: number;
+  rooms: number;
+}
 
 export default function SearchProp() {
   const navigate = useNavigate();
   const location = useLocation();
-
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  // Typed state
-  const [contractTypes, setContractTypes] = useState<ContractCategory[]>([]);
-  const [propertyTypes, setPropertyTypes] = useState<TypeCategory[]>([]);
+  // Filter options
+  const [contracts, setContracts] = useState<ContractCategory[]>([]);
+  const [types, setTypes] = useState<TypeCategory[]>([]);
   const [cities, setCities] = useState<City[]>([]);
 
-  const [selectedContract, setSelectedContract] = useState<string>("");
-  const [selectedType, setSelectedType] = useState<string>("");
-  const [selectedCity, setSelectedCity] = useState<string>("");
+  // Combined filters state
+  const [filters, setFilters] = useState<Filters>({
+    contract: "",
+    type: "",
+    city: "",
+    priceMin: 0,
+    priceMax: 5000,
+    areaMin: 0,
+    areaMax: 300,
+    rooms: -1,
+  });
 
+  // Properties
   const [properties, setProperties] = useState<Property[]>([]);
-  const [loadingFilters, setLoadingFilters] = useState<boolean>(true);
-  const [loadingProperties, setLoadingProperties] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
-  // Read query params on mount + whenever URL changes
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-
-    setSelectedCity(params.get("city") || "");
-    setSelectedType(params.get("type") || "");
-    setSelectedContract(params.get("contract") || "");
-  }, [location.search]);
-
-  // Fetch filter data
+  // 1) Load filter options once
   useEffect(() => {
     async function loadFilters() {
-      try {
-        const [contracts, types, citiesData] = await Promise.all([
-          fetchContractCategories(),
-          fetchTypeCategories(),
-          fetchCities(),
-        ]);
-
-        setContractTypes(contracts);
-        setPropertyTypes(types);
-        setCities(citiesData);
-      } catch (err) {
-        console.error("Failed to load filters:", err);
-      } finally {
-        setLoadingFilters(false);
-      }
+      const [c1, c2, c3] = await Promise.all([
+        fetchContractCategories(),
+        fetchTypeCategories(),
+        fetchCities(),
+      ]);
+      setContracts(c1);
+      setTypes(c2);
+      setCities(c3);
     }
-
     loadFilters();
   }, []);
 
-  // Update URL when filters change
-  const updateURL = (city: string, type: string, contract: string) => {
-    const params = new URLSearchParams();
-
-    if (city) params.set("city", city);
-    if (type) params.set("type", type);
-    if (contract) params.set("contract", contract);
-
-    navigate(`/searchproperty?${params.toString()}`);
-  };
-
-  // Handlers
-  const handleCityChange = (value: string) => {
-    setSelectedCity(value);
-    updateURL(value, selectedType, selectedContract);
-  };
-
-  const handleTypeChange = (value: string) => {
-    setSelectedType(value);
-    updateURL(selectedCity, value, selectedContract);
-  };
-
-  const handleContractChange = (value: string) => {
-    setSelectedContract(value);
-    updateURL(selectedCity, selectedType, value);
-  };
-
-  // AUTO‑FETCH PROPERTIES WHEN URL PARAMS CHANGE
+  // 2) When URL changes → update filters + fetch properties
   useEffect(() => {
-    if (!selectedCity || !selectedType || !selectedContract) return;
+    const params = new URLSearchParams(location.search);
 
-    async function loadProperties() {
-      setLoadingProperties(true);
+    const newFilters: Filters = {
+      city: params.get("city") || "",
+      type: params.get("type") || "",
+      contract: params.get("contract") || "",
+      priceMin: Number(params.get("priceMin")) || 0,
+      priceMax: Number(params.get("priceMax")) || 5000,
+      areaMin: Number(params.get("areaMin")) || 0,
+      areaMax: Number(params.get("areaMax")) || 300,
+      rooms: params.get("rooms") !== null ? Number(params.get("rooms")) : -1,
+    };
 
-      try {
-        const res = await fetch(
-          `${apiUrl}/properties/search?city=${selectedCity}&type=${selectedType}&contract=${selectedContract}`
-        );
-        const data = await res.json();
-        setProperties(data.properties || []);
-      } catch (err) {
-        console.error("Failed to fetch properties:", err);
-      } finally {
-        setLoadingProperties(false);
-      }
+    setFilters(newFilters);
+
+    // Fetch only if required filters selected
+    if (!newFilters.city || !newFilters.type || !newFilters.contract) return;
+
+    async function load() {
+      setLoading(true);
+
+      const res = await fetch(
+        `${apiUrl}/properties/search?city=${newFilters.city}&type=${newFilters.type}&contract=${newFilters.contract}&priceMin=${newFilters.priceMin}&priceMax=${newFilters.priceMax}&areaMin=${newFilters.areaMin}&areaMax=${newFilters.areaMax}&rooms=${newFilters.rooms}`
+      );
+
+      const data = await res.json();
+      setProperties(data.properties || []);
+      setLoading(false);
     }
 
-    loadProperties();
-  }, [selectedCity, selectedType, selectedContract, apiUrl]);
+    load();
+  }, [location.search, apiUrl]);
+
+  // 3) When user changes a filter → navigate()
+  const onFilterChange = (updated: Partial<Filters>) => {
+    const merged = { ...filters, ...updated };
+
+    navigate(
+      `/searchproperty?city=${merged.city}&type=${merged.type}&contract=${merged.contract}&priceMin=${merged.priceMin}&priceMax=${merged.priceMax}&areaMin=${merged.areaMin}&areaMax=${merged.areaMax}&rooms=${merged.rooms}`
+    );
+  };
 
   return (
     <div className="min-h-screen w-full bg-gray-50 pt-20">
-      {/* Header */}
-      <div className="w-full bg-white shadow-sm py-6 px-4 md:px-8">
-        <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">
-          Search Properties
-        </h1>
-        <p className="text-gray-500 mt-1">
-          Choose your filters to find the perfect property
-        </p>
-      </div>
+      <SearchFilters
+        filters={filters}
+        onChange={onFilterChange}
+        contracts={contracts}
+        types={types}
+        cities={cities}
+      />
 
-      {/* Filters */}
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-8">
-        <div className="bg-white shadow rounded-lg p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-gray-700">Filters</h2>
-
-          {loadingFilters ? (
-            <div className="text-gray-500 animate-pulse">
-              Loading filters...
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Contract Type */}
-              <select
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:ring-2 focus:ring-teal-500"
-                value={selectedContract}
-                onChange={(e) => handleContractChange(e.target.value)}
-              >
-                <option value="">Select Contract</option>
-                {contractTypes.map((item) => (
-                  <option key={item._id} value={item.name}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-
-              {/* Property Type */}
-              <select
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:ring-2 focus:ring-teal-500"
-                value={selectedType}
-                onChange={(e) => handleTypeChange(e.target.value)}
-              >
-                <option value="">Select Property Type</option>
-                {propertyTypes.map((item) => (
-                  <option key={item._id} value={item.name}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-
-              {/* City */}
-              <select
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:ring-2 focus:ring-teal-500"
-                value={selectedCity}
-                onChange={(e) => handleCityChange(e.target.value)}
-              >
-                <option value="">Select City</option>
-                {cities.map((item) => (
-                  <option key={item._id} value={item.name}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Results */}
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-10 pb-20">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Results</h2>
-
-        {loadingProperties ? (
+      <div className="max-w-7xl mx-auto px-4 mt-10 pb-20">
+        {loading ? (
           <div className="text-gray-500 animate-pulse">
             Loading properties...
           </div>

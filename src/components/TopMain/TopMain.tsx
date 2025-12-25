@@ -9,7 +9,6 @@ import {
 } from "../../services/categoriesService";
 
 import { fetchCities } from "../../services/citiesService";
-import { handlePropertySearch } from "../../services/searchService";
 
 import type { TypeCategory } from "../../types/typeCategory";
 import type { ContractCategory } from "../../types/contractCategory";
@@ -27,7 +26,6 @@ export default function TopMain() {
   const [typeCatItems, setTypeCatItems] = useState<TypeCategory[]>([]);
 
   const [city, setCity] = useState<string>("");
-
   const [cities, setCities] = useState<City[]>([]);
 
   // Fetch contract + type categories + cities
@@ -57,7 +55,9 @@ export default function TopMain() {
   }, []);
 
   const handleSearch = () => {
-    handlePropertySearch(navigate, city, typeCat, contractCat);
+    navigate(
+      `/searchproperty?city=${city}&type=${typeCat}&contract=${contractCat}`
+    );
   };
 
   return (
