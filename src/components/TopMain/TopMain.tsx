@@ -13,6 +13,8 @@ import { fetchCities } from "../../services/citiesService";
 import type { TypeCategory } from "../../types/typeCategory";
 import type { ContractCategory } from "../../types/contractCategory";
 import type { City } from "../../types/city";
+import MapSearch from "../MapSearch/MapSearch";
+import PolyDrawer from "../MapSearch/PolyDrawer/PolyDrawer";
 
 export default function TopMain() {
   const navigate = useNavigate();
@@ -27,6 +29,8 @@ export default function TopMain() {
 
   const [city, setCity] = useState<string>("");
   const [cities, setCities] = useState<City[]>([]);
+
+  const [isShowMap, setIsShowMap] = useState<boolean>(false);
 
   // Fetch contract + type categories + cities
   useEffect(() => {
@@ -124,11 +128,26 @@ export default function TopMain() {
           Search
         </button>
 
-        <button className="flex items-center gap-2 px-6 py-2 font-bold text-white bg-green-500 transition hover:bg-Pine">
+        <button
+          className="flex items-center gap-2 px-6 py-2 font-bold text-white bg-green-500 transition hover:bg-Pine"
+          onClick={() => setIsShowMap(true)}
+        >
           <LuMapPinned />
           Map
         </button>
       </div>
+
+      {isShowMap && (
+        <PolyDrawer
+          setIsShowMap={setIsShowMap}
+          handleSearch={handleSearch}
+          setPolyArray={() => {}}
+          mapCenter={[37.7749, -122.4194]}
+          city={city}
+          typeCat={typeCat}
+          contractCat={contractCat}
+        />
+      )}
     </div>
   );
 }

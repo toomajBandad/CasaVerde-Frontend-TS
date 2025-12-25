@@ -1,9 +1,13 @@
 import { useMap } from "react-leaflet";
 import { useEffect } from "react";
 import L from "leaflet";
-import "leaflet-draw"; // Already installed, just importing
+import "leaflet-draw";
 
-export default function DrawControl({ onDrawComplete }) {
+interface DrawControlProps {
+  onDrawComplete?: (coords: any) => void;
+}
+
+export default function DrawControl({ onDrawComplete }: DrawControlProps) {
   const map = useMap();
 
   useEffect(() => {
@@ -28,16 +32,15 @@ export default function DrawControl({ onDrawComplete }) {
         marker: false,
         circle: false,
         circlemarker: false,
-      }
+      },
     });
 
     map.addControl(drawControl);
 
-    map.on(L.Draw.Event.CREATED, (e) => {
+    map.on(L.Draw.Event.CREATED, (e: any) => {
       const layer = e.layer;
       drawnItems.addLayer(layer);
       const coords = layer.getLatLngs();
-      console.log("Polygon coords:", coords);
       if (onDrawComplete) onDrawComplete(coords);
     });
 

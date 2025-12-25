@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./MapSearch.css";
 import {
   MapContainer,
   TileLayer,
@@ -7,9 +6,9 @@ import {
   Popup,
   useMapEvents,
 } from "react-leaflet";
-import "../../plugins/leaflet/leaflet.css";
 import L from "leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import "leaflet/dist/leaflet.css";
 import { IoLocationSharp } from "react-icons/io5";
 import { IoMdCloseCircle } from "react-icons/io";
 
@@ -46,9 +45,16 @@ export default function MapSearch({
   if (!showMap) return null;
 
   return (
-    <div className="mapSearch__wrapper">
+    <div
+      className="
+        absolute h-[80vh]
+        w-full left-0
+        md:w-[30%] md:left-[15px] md:top-[10rem]
+        top-[9vh]
+      "
+    >
       <MapContainer
-        className="mapSearch__Container"
+        className="h-[80vh] w-full z-[1]"
         center={mapCenter}
         zoom={13}
         scrollWheelZoom={false}
@@ -65,23 +71,43 @@ export default function MapSearch({
         </Marker>
       </MapContainer>
 
+      {/* Finalize Button */}
       <button
-        className="mapBtn selectBtn"
+        className="
+          flex items-center gap-2 absolute top-0 left-[38px]
+          bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2
+          hover:bg-black z-[99]
+        "
         onClick={() => {
           setPropLocation(mapMarker);
           setShowMap(false);
         }}
       >
-        <IoLocationSharp className="drawBtn__icon" />
+        <IoLocationSharp className="text-[var(--Mint-Green)] text-lg" />
         Finalize Location
       </button>
 
-      <button className="mapBtn closeBtn" onClick={() => setShowMap(false)}>
+      {/* Close Button */}
+      <button
+        className="
+          flex items-center gap-2 absolute top-0 right-[3px]
+          bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2
+          hover:bg-black z-[99]
+        "
+        onClick={() => setShowMap(false)}
+      >
         <span>Close</span>
-        <IoMdCloseCircle className="drawBtn__icon" />
+        <IoMdCloseCircle className="text-[var(--Mint-Green)] text-lg" />
       </button>
 
-      <button className="mapBtn infoBtn">
+      {/* Info Button */}
+      <button
+        className="
+          flex items-center gap-2 absolute bottom-0 right-0
+          bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2
+          hover:bg-black z-[99]
+        "
+      >
         <span>Please select a location then click on "Finalize Location"</span>
       </button>
     </div>
