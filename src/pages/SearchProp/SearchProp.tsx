@@ -31,6 +31,10 @@ export default function SearchProp() {
   const location = useLocation();
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const polygonParam = searchParams.get("polygon");
+  const encodedPolygon = polygonParam ? encodeURIComponent(polygonParam) : "";
+
   // Filter options
   const [contracts, setContracts] = useState<ContractCategory[]>([]);
   const [types, setTypes] = useState<TypeCategory[]>([]);
@@ -91,7 +95,7 @@ export default function SearchProp() {
       setLoading(true);
 
       const res = await fetch(
-        `${apiUrl}/properties/search?city=${newFilters.city}&type=${newFilters.type}&contract=${newFilters.contract}&priceMin=${newFilters.priceMin}&priceMax=${newFilters.priceMax}&areaMin=${newFilters.areaMin}&areaMax=${newFilters.areaMax}&rooms=${newFilters.rooms}`
+        `${apiUrl}/properties/search?city=${newFilters.city}&type=${newFilters.type}&contract=${newFilters.contract}&priceMin=${newFilters.priceMin}&priceMax=${newFilters.priceMax}&areaMin=${newFilters.areaMin}&areaMax=${newFilters.areaMax}&rooms=${newFilters.rooms}&polygon=${encodedPolygon}`
       );
 
       const data = await res.json();
@@ -107,7 +111,7 @@ export default function SearchProp() {
     const merged = { ...filters, ...updated };
 
     navigate(
-      `/searchproperty?city=${merged.city}&type=${merged.type}&contract=${merged.contract}&priceMin=${merged.priceMin}&priceMax=${merged.priceMax}&areaMin=${merged.areaMin}&areaMax=${merged.areaMax}&rooms=${merged.rooms}`
+      `/searchproperty?city=${merged.city}&type=${merged.type}&contract=${merged.contract}&priceMin=${merged.priceMin}&priceMax=${merged.priceMax}&areaMin=${merged.areaMin}&areaMax=${merged.areaMax}&rooms=${merged.rooms}&polygon=${encodedPolygon}`
     );
   };
 

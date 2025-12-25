@@ -13,13 +13,12 @@ import { fetchCities } from "../../services/citiesService";
 import type { TypeCategory } from "../../types/typeCategory";
 import type { ContractCategory } from "../../types/contractCategory";
 import type { City } from "../../types/city";
-import MapSearch from "../MapSearch/MapSearch";
 import PolyDrawer from "../MapSearch/PolyDrawer/PolyDrawer";
 
 export default function TopMain() {
   const navigate = useNavigate();
 
-  const [contractCat, setContractCat] = useState<string>("");
+  const [contractCat, setContractCat] = useState<string>("RENT");
   const [contractsCatItems, setContractsCatItems] = useState<
     ContractCategory[]
   >([]);
@@ -27,7 +26,7 @@ export default function TopMain() {
   const [typeCat, setTypeCat] = useState<string>("Apartment");
   const [typeCatItems, setTypeCatItems] = useState<TypeCategory[]>([]);
 
-  const [city, setCity] = useState<string>("");
+  const [city, setCity] = useState<string>("Madrid");
   const [cities, setCities] = useState<City[]>([]);
 
   const [isShowMap, setIsShowMap] = useState<boolean>(false);
@@ -142,7 +141,7 @@ export default function TopMain() {
           setIsShowMap={setIsShowMap}
           handleSearch={handleSearch}
           setPolyArray={() => {}}
-          mapCenter={[37.7749, -122.4194]}
+          cities={cities}
           city={city}
           typeCat={typeCat}
           contractCat={contractCat}

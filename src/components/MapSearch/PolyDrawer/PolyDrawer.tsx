@@ -15,16 +15,16 @@ import { FaDrawPolygon } from "react-icons/fa";
 import { IoLockClosed } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
 import { IoMdCloseCircle } from "react-icons/io";
-import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 interface PolyDrawerProps {
   setIsShowMap: (value: boolean) => void;
   handleSearch: () => void;
   setPolyArray: (coords: [number, number][]) => void;
-  mapCenter: [number, number];
   city: string;
   typeCat: string;
   contractCat: string;
+  cities: { _id: string; name: string; location: [number, number] }[];
 }
 
 interface LocationItem {
@@ -54,12 +54,12 @@ export default function PolyDrawer({
   setIsShowMap,
   handleSearch,
   setPolyArray,
-  mapCenter,
   city,
   typeCat,
   contractCat,
+  cities,
 }: PolyDrawerProps) {
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   const customIcon = new L.Icon({
     iconUrl: iconImage,
@@ -71,45 +71,31 @@ export default function PolyDrawer({
   const [allLocations, setAllLocations] = useState<LocationItem[]>([]);
   const [isDisableShowList, setIsDisableShowList] = useState(true);
 
+  const mapCenter = cities.find((c) => c.name === city)?.location || [
+    40.4165, -3.70256,
+  ];
+
   const startDrawing = () => {
     setPolygonCoords([]);
     setIsDrawing(true);
   };
 
   const finishDrawing = () => {
+    console.log(polygonCoords, city, typeCat, contractCat);
+
     setIsDrawing(false);
     setPolyArray(polygonCoords);
+    const encodedPolygon = encodeURIComponent(JSON.stringify(polygonCoords));
 
-    fetch(`${apiUrl}/properties/search/locations`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ polygonCoords, city, typeCat, contractCat }),
-    })
-      .then((res) => {
-        if (res.ok) {
-          setIsDisableShowList(false);
-          return res.json();
-        } else {
-          setIsDisableShowList(true);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "No property found! Please try again",
-          });
-        }
-      })
-      .then((data) => {
-        if (data?.results) {
-          setAllLocations(data.results);
-        }
-      })
-      .catch((err) => console.log(err));
+    navigate(
+      `/searchproperty?city=${city}&type=${typeCat}&contract=${contractCat}&polygon=${encodedPolygon}`
+    );
   };
 
   return (
-    <div className="absolute top-[47px] left-0 h-[48vh] w-full">
+    <div className="absolute top-0 left-0 h-204  w-full">
       <MapContainer
-        className="h-[48vh] w-full z-[1]"
+        className="h-full w-full z-1"
         center={mapCenter}
         zoom={13}
         scrollWheelZoom={false}
@@ -140,48 +126,51 @@ export default function PolyDrawer({
       </MapContainer>
 
       {/* Buttons */}
-      <button
-        className="flex items-center gap-2 absolute top-0 left-[38px] bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2 hover:bg-black z-[99]"
-        onClick={startDrawing}
-      >
-        <FaDrawPolygon className="text-[var(--Mint-Green)] text-lg" />
-        Draw Your Area
-      </button>
-
-      <button
-        className="flex items-center gap-2 absolute top-0 left-[181px] bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2 hover:bg-black z-[99]"
-        onClick={finishDrawing}
-      >
-        <IoLockClosed className="text-[var(--Mint-Green)] text-lg" />
-        Finish Drawing
-      </button>
-
-      <button
-        disabled={isDisableShowList}
-        className={`flex items-center gap-2 absolute top-0 left-[320px] px-3 py-2 rounded-lg cursor-pointer m-2 z-[99] ${
-          isDisableShowList
-            ? "bg-gray-500 text-white"
-            : "bg-black/75 text-white hover:bg-black"
-        }`}
-        onClick={() => {
-          handleSearch();
-          setIsShowMap(false);
-        }}
-      >
-        <CiBoxList className="text-[var(--Mint-Green)] text-lg" />
-        Show List
-      </button>
-
-      <button
-        className="flex items-center gap-2 absolute top-0 right-[10px] bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2 hover:bg-black z-[99]"
-        onClick={() => {
-          setIsShowMap(false);
-          setPolyArray([]);
-        }}
-      >
-        <span>Close</span>
-        <IoMdCloseCircle className="text-[var(--Mint-Green)] text-lg" />
-      </button>
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center px-15 py-5 z-99">
+        <div className="flex flex-row justify-start items-center gap-2 w-full">
+          <button
+            className="flex items-center gap-2 bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-black z-99"
+            onClick={startDrawing}
+          >
+            <FaDrawPolygon className="text-Mint text-lg" />
+            Draw Your Area
+          </button>
+          <button
+            className="flex items-center gap-2  bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-black z-99"
+            onClick={finishDrawing}
+          >
+            <IoLockClosed className="text-Mint text-lg" />
+            Finish Drawing
+          </button>
+          <button
+            disabled={isDisableShowList}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer z-99 ${
+              isDisableShowList
+                ? "bg-gray-400 text-white"
+                : "bg-black/75 text-white hover:bg-black"
+            }`}
+            onClick={() => {
+              handleSearch();
+              setIsShowMap(false);
+            }}
+          >
+            <CiBoxList className="text-Mint text-lg" />
+            Show List
+          </button>
+        </div>
+        <div>
+          <button
+            className="flex items-center gap-2 bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer  hover:bg-black z-99"
+            onClick={() => {
+              setIsShowMap(false);
+              setPolyArray([]);
+            }}
+          >
+            <span>Close</span>
+            <IoMdCloseCircle className="text-Mint text-lg" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
