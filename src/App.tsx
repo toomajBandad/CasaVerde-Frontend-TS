@@ -5,6 +5,7 @@ import AppRoutes from "./routes/AppRoutes";
 import "leaflet/dist/leaflet.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "leaflet/dist/leaflet.css";
 
 export default function App() {
   return (
