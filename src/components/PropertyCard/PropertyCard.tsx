@@ -60,7 +60,7 @@ export default function PropertyCard({
     <div
       onClick={() => navigate(`/property/${id}`)}
       className="
-        block shadow-md hover:shadow-xl transition overflow-hidden group rounded-tl-8xl rounded-lg"
+        block shadow-sm hover:shadow-xl overflow-hidden group rounded-tl-8xl rounded-lg cursor-pointer hover:scale-102 transition "
     >
       <div
         className="
@@ -75,7 +75,7 @@ export default function PropertyCard({
             className="
               w-full h-40 sm:h-full md:h-56 
               object-cover 
-              group-hover:scale-105 transition-transform duration-300
+              transition-transform duration-300
             "
           />
         </div>

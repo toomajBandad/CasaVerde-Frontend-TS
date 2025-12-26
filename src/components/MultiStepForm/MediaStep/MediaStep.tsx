@@ -1,20 +1,33 @@
 import { useFormContext } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function MediaStep() {
-  const { setValue, watch } = useFormContext();
+  const { register, setValue, watch } = useFormContext();
   const [preview, setPreview] = useState<string | null>(null);
 
+  // Watch the file stored in RHF
   const imageFile = watch("imageFile");
+
+  // Register field for persistence
+  register("imageFile");
+
+  // 🔥 Rebuild preview when returning to this step
+  useEffect(() => {
+    if (imageFile && !preview) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result as string);
+      reader.readAsDataURL(imageFile);
+    }
+  }, [imageFile]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // ✅ Store the file in the form (NOT uploaded yet)
+    // Save file in RHF
     setValue("imageFile", file);
 
-    // ✅ Local preview only
+    // Local preview
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result as string);
     reader.readAsDataURL(file);
@@ -33,7 +46,7 @@ export default function MediaStep() {
 
       {(preview || imageFile) && (
         <img
-          src={preview || ""}
+          src={preview || "#"}
           alt="Preview"
           className="w-full h-64 object-cover rounded"
         />

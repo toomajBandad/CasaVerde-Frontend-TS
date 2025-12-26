@@ -4,19 +4,22 @@ export interface Property {
   desc: string;
   location: string;
   price: number;
-  duration: string;
+  duration: number;
   bedrooms: number;
   bathrooms: number;
   pets: boolean;
   couples: boolean;
   minors: boolean;
-  owner: string; // ObjectId as string
-  contractCategory: string; // ObjectId as string
-  typeCategory: string; // ObjectId as string
+  owner: string;
+  contractCategory: string;
+  typeCategory: string;
   image?: string;
   city: string;
-  latlng?: number[];
+  latlng: {
+    type: "Point";
+    coordinates: [number, number];
+  };
   area: number;
-  createdAt?: string; // ISO date string
+  createdAt?: string;
   updatedAt?: string;
 }

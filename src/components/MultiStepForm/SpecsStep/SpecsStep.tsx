@@ -19,7 +19,7 @@ export default function SpecsStep() {
         {...register("bedrooms", {
           required: "Number of bedrooms is required",
           min: { value: 0, message: "Minimum is 0" },
-          max: { value: 10, message: "Maximum is 10" },
+          max: { value: 5, message: "Maximum is 5" },
         })}
         error={errors.bedrooms?.message as string}
       />
@@ -32,7 +32,7 @@ export default function SpecsStep() {
         {...register("bathrooms", {
           required: "Number of bathrooms is required",
           min: { value: 0, message: "Minimum is 0" },
-          max: { value: 10, message: "Maximum is 10" },
+          max: { value: 3, message: "Maximum is 3" },
         })}
         error={errors.bathrooms?.message as string}
       />

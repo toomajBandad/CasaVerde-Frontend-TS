@@ -63,6 +63,7 @@ export default function ParentForm() {
       imageFile: null,
       owner: authContext.userInfos?.id || "",
     },
+    shouldUnregister: false,
     mode: "onTouched",
     reValidateMode: "onBlur",
     criteriaMode: "all",
@@ -126,8 +127,14 @@ export default function ParentForm() {
 
       if (res.ok) {
         authContext.updateUserInfos();
-
-        navigate("/profile");
+        Swal.fire({
+          icon: "success",
+          title: "success",
+          text: "Addes Property successfully",
+        });
+        setTimeout(() => {
+          navigate("/profile");
+        }, 2000);
       } else {
         Swal.fire({
           icon: "error",

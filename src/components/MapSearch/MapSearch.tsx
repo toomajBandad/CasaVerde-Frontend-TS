@@ -49,12 +49,12 @@ export default function MapSearch({
       className="
         absolute h-[80vh]
         w-full left-0
-        md:w-[30%] md:left-[15px] md:top-[10rem]
+        md:w-[30%] md:left-[15px] md:top-40
         top-[9vh]
       "
     >
       <MapContainer
-        className="h-[80vh] w-full z-[1]"
+        className="h-[80vh] w-full z-1"
         center={mapCenter}
         zoom={13}
         scrollWheelZoom={false}
@@ -76,14 +76,14 @@ export default function MapSearch({
         className="
           flex items-center gap-2 absolute top-0 left-[38px]
           bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2
-          hover:bg-black z-[99]
+          hover:bg-black z-99
         "
         onClick={() => {
           setPropLocation(mapMarker);
           setShowMap(false);
         }}
       >
-        <IoLocationSharp className="text-[var(--Mint-Green)] text-lg" />
+        <IoLocationSharp className="text-Mint text-lg" />
         Finalize Location
       </button>
 
@@ -92,12 +92,12 @@ export default function MapSearch({
         className="
           flex items-center gap-2 absolute top-0 right-[3px]
           bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2
-          hover:bg-black z-[99]
+          hover:bg-black z-99
         "
         onClick={() => setShowMap(false)}
       >
         <span>Close</span>
-        <IoMdCloseCircle className="text-[var(--Mint-Green)] text-lg" />
+        <IoMdCloseCircle className="text-Mint text-lg" />
       </button>
 
       {/* Info Button */}
@@ -105,7 +105,7 @@ export default function MapSearch({
         className="
           flex items-center gap-2 absolute bottom-0 right-0
           bg-black/75 text-white px-3 py-2 rounded-lg cursor-pointer m-2
-          hover:bg-black z-[99]
+          hover:bg-black z-99
         "
       >
         <span>Please select a location then click on "Finalize Location"</span>
