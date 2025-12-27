@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import NewsCart from "../NewsCart/NewsCart";
+import NewsCartSkeleton from "../Skeletens/NewsCartSkeleton/NewsCartSkeleton";
 
 interface NewsItem {
   _id: string;
-  coverImage: string;
-  mainTitle: string;
+  coverImage?: string;
+  title: string;
+  subtitle?: string;
+  teaser?: string;
   category: string;
+  author?: string;
+  tags?: string[];
+  createdAt: string;
 }
 
 export default function NewsBar() {
@@ -39,6 +45,8 @@ export default function NewsBar() {
     fetchData();
   }, [apiUrl]);
 
+  const filteredNews = allNews.filter((item) => item.category === newsCategory);
+
   return (
     <div className="flex flex-col justify-center items-start m-0 p-0 h-auto md:mx-20 md:py-8">
       <h2 className="mainTitle">Casa Verde / News</h2>
@@ -52,11 +60,11 @@ export default function NewsBar() {
         {allNewsCat.map((cat) => (
           <span
             key={cat}
-            className={`cursor-pointer rounded-t-md p-2 md:px-4 md:py-2
+            className={`cursor-pointer rounded-t-md p-2 md:px-4 md:py-2 transition-all
               ${
                 cat === newsCategory
                   ? "border-b-2 border-Pine text-Lemon bg-Pine"
-                  : "text-gray-500"
+                  : "text-gray-500 hover:text-Pine hover:bg-Seafoam"
               }`}
             onClick={() => setNewsCategory(cat)}
           >
@@ -66,32 +74,19 @@ export default function NewsBar() {
       </div>
 
       {/* News Cards */}
-      <div className="flex justify-center items-center w-full flex-col gap-0 md:flex-row md:gap-8">
+      <div className="flex justify-center items-center w-full flex-col gap-6 md:flex-row md:flex-wrap md:gap-8">
         {loading ? (
-          // Skeleton loader UI
           <>
             {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="animate-pulse flex flex-col items-center w-64 h-72 bg-gray-200 rounded-lg p-4"
-              >
-                <div className="w-full h-40 bg-gray-300 rounded-md mb-4"></div>
-                <div className="w-3/4 h-4 bg-gray-300 rounded mb-2"></div>
-                <div className="w-1/2 h-4 bg-gray-300 rounded"></div>
-              </div>
+              <NewsCartSkeleton key={i} />
             ))}
           </>
+        ) : filteredNews.length > 0 ? (
+          filteredNews.map((item) => <NewsCart key={item._id} item={item} />)
         ) : (
-          allNews
-            .filter((item) => item.category === newsCategory)
-            .map((item) => (
-              <NewsCart
-                key={item._id}
-                img={item.coverImage}
-                text={item.mainTitle}
-                link={`/news/${item._id}`}
-              />
-            ))
+          <p className="text-gray-500 py-10">
+            No news available in this category.
+          </p>
         )}
       </div>
     </div>

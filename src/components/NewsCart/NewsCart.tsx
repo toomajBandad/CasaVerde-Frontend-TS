@@ -1,23 +1,53 @@
 import { useNavigate } from "react-router";
 
 interface NewsCartProps {
-  img?: string | null;
-  text: string;
-  link: string;
+  item: {
+    _id: string;
+    coverImage?: string;
+    title: string;
+    subtitle?: string;
+    author?: string;
+    createdAt: string;
+  };
 }
 
-export default function NewsCart({ img, text, link }: NewsCartProps) {
+export default function NewsCart({ item }: NewsCartProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col justify-around items-start w-96 border border-gray-400">
-      <img src={img ?? ""} className="w-full" alt="cart-img" />
-      <div className="font-bold p-4 flex flex-col gap-4">
-        <div className="text-gray-500">{text}</div>
-        <div
-          className="text-(--Pine-Green) underline hover:cursor-pointer hover:[text-shadow:1px_1px_1px_var(--Mint-Green)]"
-          onClick={() => navigate(link)}
-        >
+    <div
+      className="w-full max-w-96 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-lg hover:scale-102 cursor-pointer flex flex-col transition"
+      onClick={() => navigate(`/news/${item._id}`)}
+    >
+      {/* Image */}
+      <div className="w-full h-48 overflow-hidden">
+        <img
+          src={item.coverImage ?? ""}
+          alt="news-cover"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="p-5 flex flex-col gap-3">
+        {/* Title */}
+        <h3 className="font-Gumy text-xl text-darkGray leading-tight">
+          {item.title}
+        </h3>
+
+        {/* Subtitle */}
+        {item.subtitle && (
+          <p className="text-gray-500 text-sm leading-snug">{item.subtitle}</p>
+        )}
+
+        {/* Author + Date */}
+        <div className="text-xs text-gray-500 mt-1">
+          {item.author && <span>{item.author} • </span>}
+          {new Date(item.createdAt).toLocaleDateString()}
+        </div>
+
+        {/* CTA */}
+        <div className="mt-3 underline text-Pine hover:text-teal-500">
           Read More
         </div>
       </div>
