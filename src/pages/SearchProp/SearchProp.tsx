@@ -14,6 +14,8 @@ import type { City } from "../../types/city";
 
 import SearchFilters from "../../components/SearchFilters/SearchFilters";
 import PropertyCard from "../../components/PropertyCard/PropertyCard";
+import EmptyState from "../../components/EmptyState/EmptyState";
+import PropertyCardSkeleton from "../../components/Skeletens/PropertyCardSkeleton/PropertyCardSkeleton";
 
 interface Filters {
   contract: string;
@@ -31,7 +33,7 @@ export default function SearchProp() {
   const location = useLocation();
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = new URLSearchParams(location.search);
   const polygonParam = searchParams.get("polygon");
   const encodedPolygon = polygonParam ? encodeURIComponent(polygonParam) : "";
 
@@ -40,21 +42,24 @@ export default function SearchProp() {
   const [types, setTypes] = useState<TypeCategory[]>([]);
   const [cities, setCities] = useState<City[]>([]);
 
-  // Combined filters state
-  const [filters, setFilters] = useState<Filters>({
-    contract: "",
-    type: "",
-    city: "",
-    priceMin: 0,
-    priceMax: 5000,
-    areaMin: 0,
-    areaMax: 300,
-    rooms: -1,
-  });
-
   // Properties
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // 👉 Compute filters directly from URL (NO STATE)
+  const filters: Filters = {
+    city: searchParams.get("city") || "",
+    type: searchParams.get("type") || "",
+    contract: searchParams.get("contract") || "",
+    priceMin: Number(searchParams.get("priceMin")) || 0,
+    priceMax: Number(searchParams.get("priceMax")) || 5000,
+    areaMin: Number(searchParams.get("areaMin")) || 0,
+    areaMax: Number(searchParams.get("areaMax")) || 300,
+    rooms:
+      searchParams.get("rooms") !== null
+        ? Number(searchParams.get("rooms"))
+        : -1,
+  };
 
   // 1) Load filter options once
   useEffect(() => {
@@ -71,31 +76,15 @@ export default function SearchProp() {
     loadFilters();
   }, []);
 
-  // 2) When URL changes → update filters + fetch properties
+  // 2) Fetch properties when URL changes
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-
-    const newFilters: Filters = {
-      city: params.get("city") || "",
-      type: params.get("type") || "",
-      contract: params.get("contract") || "",
-      priceMin: Number(params.get("priceMin")) || 0,
-      priceMax: Number(params.get("priceMax")) || 5000,
-      areaMin: Number(params.get("areaMin")) || 0,
-      areaMax: Number(params.get("areaMax")) || 300,
-      rooms: params.get("rooms") !== null ? Number(params.get("rooms")) : -1,
-    };
-
-    setFilters(newFilters);
-
-    // Fetch only if required filters selected
-    if (!newFilters.city || !newFilters.type || !newFilters.contract) return;
+    if (!filters.city || !filters.type || !filters.contract) return;
 
     async function load() {
       setLoading(true);
 
       const res = await fetch(
-        `${apiUrl}/properties/search?city=${newFilters.city}&type=${newFilters.type}&contract=${newFilters.contract}&priceMin=${newFilters.priceMin}&priceMax=${newFilters.priceMax}&areaMin=${newFilters.areaMin}&areaMax=${newFilters.areaMax}&rooms=${newFilters.rooms}&polygon=${encodedPolygon}`
+        `${apiUrl}/properties/search?city=${filters.city}&type=${filters.type}&contract=${filters.contract}&priceMin=${filters.priceMin}&priceMax=${filters.priceMax}&areaMin=${filters.areaMin}&areaMax=${filters.areaMax}&rooms=${filters.rooms}&polygon=${encodedPolygon}`
       );
 
       const data = await res.json();
@@ -104,7 +93,8 @@ export default function SearchProp() {
     }
 
     load();
-  }, [location.search, apiUrl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, apiUrl, encodedPolygon]);
 
   // 3) When user changes a filter → navigate()
   const onFilterChange = (updated: Partial<Filters>) => {
@@ -116,39 +106,52 @@ export default function SearchProp() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 pt-20">
-      <SearchFilters
-        filters={filters}
-        onChange={onFilterChange}
-        contracts={contracts}
-        types={types}
-        cities={cities}
-      />
+    <div className="min-h-screen w-full">
+      <div className="h-20 bg-linear-to-r from-teal-800 via-teal-400 to-teal-300"></div>
 
-      <div className="max-w-7xl mx-auto px-4 mt-10 pb-20">
-        {loading ? (
-          <div className="text-gray-500 animate-pulse">
-            Loading properties...
-          </div>
-        ) : properties.length ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <PropertyCard
-                key={property._id}
-                id={property._id}
-                title={property.title}
-                price={property.price}
-                image={property.image as string}
-                location={property.location}
-                rooms={property.bedrooms}
-                area={property.area}
-                description={property.desc}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500">No properties found.</p>
-        )}
+      <div className="mx-auto pb-20 grid grid-cols-1 md:grid-cols-[280px_1fr] gap-10 px-10">
+        {/* Sidebar */}
+        <aside className=" h-fit sticky top-30">
+          <SearchFilters
+            filters={filters}
+            onChange={onFilterChange}
+            contracts={contracts}
+            types={types}
+            cities={cities}
+          />
+        </aside>
+
+        {/* Results */}
+        <main className="px-0 pt-15">
+          {loading ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <PropertyCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : properties.length ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 animate-fade-in-scale">
+              {properties.map((property) => (
+                <PropertyCard
+                  key={property._id}
+                  id={property._id}
+                  title={property.title}
+                  price={property.price}
+                  image={property.image as string}
+                  location={property.location}
+                  rooms={property.bedrooms}
+                  area={property.area}
+                  description={property.desc}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="No properties found"
+              message="Try adjusting your filters or drawing a different area on the map."
+            />
+          )}
+        </main>
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ export default function MediaStep() {
       reader.onloadend = () => setPreview(reader.result as string);
       reader.readAsDataURL(imageFile);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageFile]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -27,8 +27,9 @@ export default function Topbar() {
       {/* Desktop menu */}
       <div className="hidden md:flex w-full justify-between items-center">
         {/* Logo */}
+
         <div
-          className="font-Fascinate text-Pine text-[2.2rem] cursor-pointer"
+          className="font-Fascinate text-4xl cursor-pointer text-transparent bg-clip-text bg-linear-to-r from-Pine via-teal-300 to-teal-500 drop-shadow-md animate-fade-in-scale"
           onClick={() => navigate("/")}
         >
           CASA VERDE

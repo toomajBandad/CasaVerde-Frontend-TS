@@ -3,8 +3,9 @@ import ParentForm from "../../components/MultiStepForm/ParentForm/ParentForm";
 
 export default function CreateProperty() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-teal-500 via-teal-200 to-teal-200 pt-30 pb-10">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 items-start px-4">
+    <div className="min-h-screen bg-linear-to-br from-teal-500 via-teal-200 to-teal-200 pb-10">
+      <div className="h-20 bg-linear-to-r from-teal-800 via-teal-400 to-teal-300"></div>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 items-start px-4 pt-10">
         <div className="hidden md:block">
           <img
             src="/images/sides/1.jpg" //
